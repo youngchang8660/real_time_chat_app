@@ -1,0 +1,8 @@
+-- USE chat_app_db;
+-- CREATE TABLE Users (
+--     user_unique_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+--     user_id varchar(100) NOT NULL,
+--     user_name varchar(100) NOT NULL,
+--     password varchar(100) NOT NULL,
+--     password_confirm varchar(100) NOT NULL
+-- )
