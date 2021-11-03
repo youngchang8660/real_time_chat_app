@@ -14,7 +14,6 @@ class Home extends React.Component<any, {
     }
 
     componentDidMount = () => {
-        console.log(this.state.userID)
         if(this.state.userID === null || this.state.userID === undefined) {
             this.props.history.push('/signIn')
         }

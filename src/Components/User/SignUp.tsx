@@ -161,8 +161,12 @@ class SignUp extends React.Component<any, {
                             />
                         </div>
                     </div>
-                    <div className="signUpButtonContainer mt-3">
-                        <Button style={{fontSize: '16px', fontWeight: 'bold' }} variant="outlined" onClick={this.signUpNewUser}>Sign Up</Button>
+                    <div className="mt-3">
+                        <Button className="signUpButton" style={{fontSize: '16px', fontWeight: 'bold' }} variant="outlined" onClick={this.signUpNewUser}>Sign Up</Button>
+                    </div>
+                    <h5 className="signUpHorizontalLine"><span>Or</span></h5>
+                    <div style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
+                        <h5 onClick={() => {this.props.history.push('/signIn')}} style={{cursor: 'pointer', marginTop: '10px'}}>Sign in instead</h5>
                     </div>
                 </div>
                 <MessageSnackbar

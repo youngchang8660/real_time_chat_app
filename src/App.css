@@ -20,13 +20,30 @@
   font-weight: 700;
 }
 
-.signUpButtonContainer, .signInButtonContainer {
-  display: flex;
-  justify-content: flex-end;
+.signInButton, .signUpButton {
+  width: 100%;
 }
 
 .containerTitle {
   margin-bottom: 5%;
+}
+
+.signInHorizontalLine, .signUpHorizontalLine {
+  width: 100%; 
+  text-align: center; 
+  border-bottom: 1px solid #000; 
+  line-height: 0.1em;
+  margin: 30px 0 20px; 
+}
+
+.signInHorizontalLine span {
+  background:#fff; 
+  padding:0 10px; 
+}
+
+.signUpHorizontalLine span {
+  background:#fff; 
+  padding:0 10px; 
 }
 
 @media only screen 
@@ -86,5 +103,23 @@ and (orientation: landscape) {
 
   .containerTitle {
     margin-bottom: 0;
+  }
+}
+
+/******************* Side Nav **********************/
+
+.sideNavBody {
+  width: 56px;
+  height: 100vh;
+}
+
+.sideNav {
+  height: 100%;
+  width: 56px;
+}
+
+@media all and (min-width: 480px) {
+  .sideNavBody {
+    display: block;
   }
 }

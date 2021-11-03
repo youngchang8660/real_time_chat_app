@@ -47,7 +47,7 @@ class SignIn extends React.Component<any, {
                     let data: any = res.data;
                     localStorage.setItem('user_id', data.user_id)
                     localStorage.setItem('user_name', data.user_name)
-                    this.props.history.push('/home')
+                    this.props.history.push('/chatApp/chat')
                 }
             }).catch(err => {
                 if(err.response.status === 500) {
@@ -69,11 +69,12 @@ class SignIn extends React.Component<any, {
     }
 
     render() {
+        console.log(this.props)
         return (
             <div className="signInBody">
                 <div className="signInContainer">
                     <div className="containerTitle">
-                        <h2>Create an account</h2>
+                        <h2>Login</h2>
                     </div>
                     <div>
                         <label className="mb-2 signInLabel">ID</label>
@@ -93,8 +94,12 @@ class SignIn extends React.Component<any, {
                             required
                         />
                     </div>
-                    <div className="signInButtonContainer mt-3">
-                        <Button variant="outlined" onClick={this.clickLogin}>Log In</Button>
+                    <div className="mt-3">
+                        <Button className="signInButton" variant="outlined" style={{fontSize: '16px', fontWeight: 'bold' }} onClick={this.clickLogin}>Log In</Button>
+                    </div>
+                    <h5 className="signInHorizontalLine"><span>Or</span></h5>
+                    <div style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
+                        <h5 onClick={() => {this.props.history.push('/signUp')}} style={{cursor: 'pointer', marginTop: '10px'}}>Sign Up</h5>
                     </div>
                 </div>
                 <MessageSnackbar 
