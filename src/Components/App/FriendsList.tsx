@@ -1,4 +1,5 @@
 import React from "react";
+import AddBoxIcon from '@mui/icons-material/AddBox';
 
 class FriendsList extends React.Component<any, {
 

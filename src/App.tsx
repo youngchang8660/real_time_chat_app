@@ -8,11 +8,12 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import SignUp from './Components/User/SignUp';
-import SignIn from './Components/User/SignIn';
+import Login from './Components/User/Login';
 import InnerSideNav from './Components/App/InnerSideNav';
 import Chat from './Components/App/Chat';
-import Setting from './Components/App/Setting';
+import Profile from './Components/App/Profile';
 import FriendsList from './Components/App/FriendsList';
+import { Redirect } from 'react-router-dom';
 
 class App extends React.Component<any, {
 
@@ -24,6 +25,10 @@ class App extends React.Component<any, {
     }
   }
 
+  componentDidUpdate = () => {
+    console.log(localStorage.getItem('user_id'))
+  }
+
   render() {
     return (
       <div>
@@ -31,11 +36,12 @@ class App extends React.Component<any, {
           <Switch>
             <React.Fragment>
               <Route exact path="/signUp" component={SignUp} />
-              <Route exact path="/signIn" component={SignIn} />
+              <Route exact path="/" render={() => <Redirect to="/login" />} />
+              <Route exact path="/login" component={Login} />
               <div style={{display: 'flex'}}>
                 <InnerSideNav />
                 <Route exact path="/chatApp/chat" component={Chat} />
-                <Route exact path="/chatApp/setting" component={Setting} />
+                <Route exact path="/chatApp/profile" component={Profile} />
                 <Route exact path="/chatApp/friends" component={FriendsList} />
               </div>
             </React.Fragment>

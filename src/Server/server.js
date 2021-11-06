@@ -4,7 +4,7 @@ const app = express();
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const cors = require('cors');
-const createError = require('http-errors');
+
 app.use(cors());
 app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -32,9 +32,10 @@ connection.connect((err) => {
 
 // Register new users
 app.post('/api/signUpNewUser', async (req, res) => {
-    let { user_id, user_name, password, password_confirm } = req.body;
+    let { user_id, first_name, last_name, email, password, password_confirm } = req.body;
+    let user_image = null;
     try {
-        if(user_id === '' || user_name === '' || password === '' || password_confirm === '') {
+        if(user_id === '' || first_name === '' || last_name === '' || email === '' || password === '' || password_confirm === '') {
             return res.status(500).send("Fill up all required Fields.");
         }
         if(password_confirm !== password) {
@@ -45,8 +46,8 @@ app.post('/api/signUpNewUser', async (req, res) => {
         password = await bcrypt.hash(password, salt);
         password_confirm = password;
 
-        let query = "CALL SignUp_New_User (?, ?, ?, ?)";
-        connection.query(query, [user_id, user_name, password, password_confirm], (err, result) => {
+        let query = "CALL SignUp_New_User (?, ?, ?, ?, ?, ?, ?)";
+        connection.query(query, [user_id, email, first_name, last_name, user_image, password, password_confirm], (err, result) => {
             if(err) {
                 return res.status(500).send("User already exists.");
             } else {

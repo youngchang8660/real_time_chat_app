@@ -10,9 +10,10 @@
 .signUpContainer, .signInContainer {
   box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
   padding: 3%;
-  width: 30%;
-  height: 80%;
+  width: 40%;
+  height: auto;
   margin-top: 5%;
+  margin-bottom: 3%;
 }
 
 .signUpLabel, .signInLabel {
@@ -26,6 +27,8 @@
 
 .containerTitle {
   margin-bottom: 5%;
+  font-size: 27px !important;
+  font-weight: bold;
 }
 
 .signInHorizontalLine, .signUpHorizontalLine {
@@ -55,8 +58,8 @@ and (orientation : landscape) {
   }
 
   .signUpContainer, .signInContainer {
-    width: 50%;
-    height: 70%;
+    width: 60%;
+    height: 90%;
   }
 }
 
@@ -65,7 +68,7 @@ and (max-device-width: 1024px)
 and (orientation: portrait) {
   .signUpContainer, .signInContainer {
     margin-top: 10%;
-    height: 50%;
+    height: 70%;
     width: 60%;
   }
 }
@@ -75,6 +78,16 @@ and (orientation: portrait) {
     margin-top: 0;
     width: 100%;
     height: auto;
+  }
+
+  .containerTitle {
+    font-size: 24px !important;
+    font-weight: bold;
+  }
+
+  .signUpLabel {
+    font-size: 12px !important;
+    font-weight: bold;
   }
 }
 
@@ -122,4 +135,10 @@ and (orientation: landscape) {
   .sideNavBody {
     display: block;
   }
+}
+
+/******************** Profile Setting *******************/
+.profileTopNav {
+  height: 50px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 }

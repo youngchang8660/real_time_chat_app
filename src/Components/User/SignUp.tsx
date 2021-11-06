@@ -6,7 +6,9 @@ import MessageSnackbar from '../Reusable/MessageSnackbar';
 
 class SignUp extends React.Component<any, {
     user_id: string,
-    user_name: string,
+    first_name: string,
+    last_name: string,
+    email: string,
     password: string,
     password_confirm: string,
     messageSnackbarString: string,
@@ -18,7 +20,9 @@ class SignUp extends React.Component<any, {
         super(props);
         this.state = {
             user_id: "",
-            user_name: "",
+            first_name: "",
+            last_name: "",
+            email: "",
             password: "",
             password_confirm: "",
             messageSnackbarString: "",
@@ -30,7 +34,8 @@ class SignUp extends React.Component<any, {
 
     componentDidMount = () => {
         localStorage.removeItem('user_id');
-        localStorage.removeItem('user_name');
+        localStorage.removeItem('first_name');
+        localStorage.removeItem('last_name');
     }
 
     handleOnChange = (e: any, label: any) => {
@@ -39,9 +44,19 @@ class SignUp extends React.Component<any, {
                 user_id: e.currentTarget.value
             })
         }
-        if(label === 'user_name') {
+        if(label === 'first_name') {
             this.setState({
-                user_name: e.currentTarget.value
+                first_name: e.currentTarget.value
+            })
+        }
+        if(label === 'last_name') {
+            this.setState({
+                last_name: e.currentTarget.value
+            })
+        }
+        if(label === 'email') {
+            this.setState({
+                email: e.currentTarget.value
             })
         }
         if(label === 'password') {
@@ -57,15 +72,17 @@ class SignUp extends React.Component<any, {
     }
 
     signUpNewUser = () => {
-        let { user_id, user_name, password, password_confirm } = this.state;
+        let { user_id, first_name, last_name, email, password, password_confirm } = this.state;
         let url = ('http://localhost:5032/api/signUpNewUser');
         let data = {
             'user_id': user_id,
-            'user_name': user_name,
+            'first_name': first_name,
+            'last_name': last_name,
+            'email': email,
             'password': password,
             'password_confirm': password_confirm
         };
-        // console.log(data)
+        console.log(data)
         const options: any = {
             method: 'POST',
             headers: { 'content-type': 'application/x-www-form-urlencoded' },
@@ -99,17 +116,17 @@ class SignUp extends React.Component<any, {
             isSnackbarOpen: false
         }, () => {
             if(this.state.isSuccessfullySignedUp) {
-                this.props.history.push('/signIn');
+                this.props.history.push('/login');
             }
         })
     }
 
     render() {
         return (
-            <div className="signUpBody">
+            <div className="signUpBody container">
                 <div className="signUpContainer">
                     <div className="containerTitle">
-                        <h2>Create an account</h2>
+                        <div>Create an account</div>
                     </div>
                     <div>
                         <label className='mb-2 signUpLabel'>User ID</label>
@@ -123,13 +140,39 @@ class SignUp extends React.Component<any, {
                             />
                         </div>
                     </div>
+                    <div className="row d-flex flex-wrap">
+                        <div className="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                            <label className='mb-2 signUpLabel'>First Name</label>
+                            <div>
+                                <TextField
+                                    id="first_name_input"
+                                    variant="outlined"
+                                    onChange={(e) => {this.handleOnChange(e, 'first_name')}}
+                                    required
+                                    style={{width: '100%'}}
+                                />
+                            </div>
+                        </div>
+                        <div className="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                            <label className='mb-2 signUpLabel'>Last Name</label>
+                            <div>
+                                <TextField
+                                    id="last_name_input"
+                                    variant="outlined"
+                                    onChange={(e) => {this.handleOnChange(e, 'last_name')}}
+                                    required
+                                    style={{width: '100%'}}
+                                />
+                            </div>
+                        </div>
+                    </div>
                     <div>
-                        <label className='mb-2 signUpLabel'>User Name</label>
+                        <label className='mb-2 signUpLabel'>Email</label>
                         <div>
                             <TextField
-                                id="user_name_input"
+                                id="email_input"
                                 variant="outlined"
-                                onChange={(e) => {this.handleOnChange(e, 'user_name')}}
+                                onChange={(e) => {this.handleOnChange(e, 'email')}}
                                 required
                                 className="col-12"
                             />
@@ -166,7 +209,7 @@ class SignUp extends React.Component<any, {
                     </div>
                     <h5 className="signUpHorizontalLine"><span>Or</span></h5>
                     <div style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
-                        <h5 onClick={() => {this.props.history.push('/signIn')}} style={{cursor: 'pointer', marginTop: '10px'}}>Sign in instead</h5>
+                        <h5 onClick={() => {this.props.history.push('/login')}} style={{cursor: 'pointer', marginTop: '10px'}}>Sign in instead</h5>
                     </div>
                 </div>
                 <MessageSnackbar

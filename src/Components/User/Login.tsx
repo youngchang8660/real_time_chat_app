@@ -4,7 +4,7 @@ import axios from 'axios';
 import qs from 'qs';
 import MessageSnackbar from '../Reusable/MessageSnackbar';
 
-class SignIn extends React.Component<any, {
+class Login extends React.Component<any, {
     userID: any,
     password: any,
     snackbarMessage: any,
@@ -24,7 +24,9 @@ class SignIn extends React.Component<any, {
 
     componentDidMount = () => {
         localStorage.removeItem('user_id');
-        localStorage.removeItem('user_name');
+        localStorage.removeItem('email');
+        localStorage.removeItem('first_name')
+        localStorage.removeItem('last_name');
     }
 
     clickLogin = () => {
@@ -34,7 +36,6 @@ class SignIn extends React.Component<any, {
             'user_id': userID,
             'password': password
         };
-        console.log(url)
         const options: any = {
             method: 'POST',
             headers: { 'content-type': 'application/x-www-form-urlencoded' },
@@ -45,8 +46,11 @@ class SignIn extends React.Component<any, {
             .then(res => {
                 if(res.status === 200) {
                     let data: any = res.data;
+                    console.log(data)
                     localStorage.setItem('user_id', data.user_id)
-                    localStorage.setItem('user_name', data.user_name)
+                    localStorage.setItem('first_name', data.first_name)
+                    localStorage.setItem('last_name', data.last_name)
+                    localStorage.setItem('email', data.email)
                     this.props.history.push('/chatApp/chat')
                 }
             }).catch(err => {
@@ -69,7 +73,6 @@ class SignIn extends React.Component<any, {
     }
 
     render() {
-        console.log(this.props)
         return (
             <div className="signInBody">
                 <div className="signInContainer">
@@ -113,4 +116,4 @@ class SignIn extends React.Component<any, {
     }
 }
 
-export default SignIn;
+export default Login;

@@ -1,18 +1,24 @@
 -- DELIMITER //
 
--- CREATE PROCEDURE SignUp_New_User(new_user_id varchar(100), new_user_name varchar(100), new_password varchar(100), new_password_confirm varchar(100))
+-- CREATE PROCEDURE SignUp_New_User(new_user_id varchar(100), new_email varchar(100), new_first_name varchar(100), new_last_name varchar(100), new_user_image BLOB, new_password varchar(100), new_password_confirm varchar(100))
 -- BEGIN
 -- 	DECLARE myCount INT DEFAULT 0;
 -- 	SET myCount = (SELECT COUNT(*) FROM Users WHERE user_id = new_user_id);
 -- 	IF (myCount = 0) THEN
 -- 	INSERT INTO Users (
 -- 		user_id,
--- 		user_name,
+-- 		email,
+--         first_name,
+--         last_name,
+--         user_image,
 -- 		password,
 -- 		password_confirm
 -- 	) VALUES (
 -- 		new_user_id,
--- 		new_user_name,
+--         new_email,
+-- 		new_first_name,
+--         new_last_name,
+--         new_user_image,
 -- 		new_password,
 -- 		new_password_confirm
 -- 	);

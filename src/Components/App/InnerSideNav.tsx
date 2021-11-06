@@ -6,16 +6,24 @@ import PeoplesIcon from '@rsuite/icons/Peoples';
 import GearIcon from '@rsuite/icons/Gear';
 import { withRouter } from 'react-router-dom';
 import ExitIcon from '@rsuite/icons/Exit';
+import NoticeIcon from '@rsuite/icons/Notice';
+import {connect} from 'react-redux';
+import { toggleLogoutDialog } from '../../redux/actions';
+import SignOutDialog from './SignOutDialog';
 
 class InnerSideNav extends React.Component<any, {
     toggleExpanded: boolean,
     activeKey: any,
+    signOutDialogOpen: boolean,
+    isLogoutClicked: boolean,
 }>{
     constructor(props: any) {
         super(props);
         this.state = {
             toggleExpanded: false,
             activeKey: '1',
+            signOutDialogOpen: false,
+            isLogoutClicked: false
         }
     }
 
@@ -28,10 +36,13 @@ class InnerSideNav extends React.Component<any, {
                 this.props.history.push('/chatApp/friends');
                 break;
             case "3":
-                this.props.history.push('/chatApp/setting');
+                this.props.history.push('/chatApp/notifications');
                 break;
             case "4":
-                this.props.history.push('/signIn');
+                this.props.history.push('/chatApp/profile');
+                break;
+            case "5":
+                this.props.toggleLogoutDialog(true)
                 break;   
             default:
                 break;
@@ -41,38 +52,58 @@ class InnerSideNav extends React.Component<any, {
         })
     }
 
+    
+
     render() {
         let { toggleExpanded } = this.state;
         return (
-            <div className="sideNavBody">
-                <Sidenav
-                    className="sideNav"
-                    expanded={toggleExpanded}
-                    defaultOpenKeys={['1']}
-                >
-                    <Sidenav.Body>
-                        <Nav
-                            activeKey={this.state.activeKey}
-                            onSelect={this.onChangeSelect}
-                        >
-                            <Nav.Item style={{fontSize: '20px'}} onClick={() => {this.onChangeSelect('1')}} eventKey="1" icon={<WechatOutlineIcon />}>
-                                Chats
-                            </Nav.Item>
-                            <Nav.Item  onClick={() => {this.onChangeSelect('2')}} eventKey="2" icon={<PeoplesIcon />}>
-                                Friends
-                            </Nav.Item>
-                            <Nav.Item onClick={() => {this.onChangeSelect('3')}} eventKey="3" icon={<GearIcon />}>
-                                Setting
-                            </Nav.Item>
-                            <Nav.Item onClick={() => {this.onChangeSelect('4')}} eventKey="4" icon={<ExitIcon />}>
-                                Log Out
-                            </Nav.Item>
-                        </Nav>
-                    </Sidenav.Body>
-                </Sidenav>
+            <div>
+                <div className="sideNavBody" style={this.props.location.pathname === '/login' || this.props.location.pathname === '/signUp' ? {display: 'none'} : {}}>
+                    <Sidenav
+                        className="sideNav"
+                        expanded={toggleExpanded}
+                        defaultOpenKeys={['1']}
+                    >
+                        <Sidenav.Body>
+                            <Nav
+                                activeKey={this.state.activeKey}
+                                onSelect={this.onChangeSelect}
+                            >
+                                <Nav.Item onClick={() => {this.onChangeSelect('1')}} icon={<WechatOutlineIcon />}>
+                                    Chats
+                                </Nav.Item>
+                                <Nav.Item  onClick={() => {this.onChangeSelect('2')}} icon={<PeoplesIcon />}>
+                                    Friends
+                                </Nav.Item>
+                                <Nav.Item onClick={() => {this.onChangeSelect('3')}} icon={<NoticeIcon />}>
+                                    Notification
+                                </Nav.Item>
+                                <Nav.Item onClick={() => {this.onChangeSelect('4')}} icon={<GearIcon />}>
+                                    Profile
+                                </Nav.Item>
+                                <Nav.Item onClick={() => {this.onChangeSelect('5')}} icon={<ExitIcon />}>
+                                    Log Out
+                                </Nav.Item>
+                            </Nav>
+                        </Sidenav.Body>
+                    </Sidenav>
+                </div>
+                {this.props.logoutDialogOpen === true && <SignOutDialog />}
             </div>
         )
     }
 }
 
-export default withRouter(InnerSideNav);
+function mapStateToProps(state: any) {
+    return {
+        logoutDialogOpen: state.logoutDialogOpen
+    }
+}
+
+function matchDispatchToProps(dispatch: any) {
+    return {
+        toggleLogoutDialog: () => dispatch(toggleLogoutDialog())
+    }
+}
+
+export default withRouter(connect(mapStateToProps, matchDispatchToProps)(InnerSideNav));
