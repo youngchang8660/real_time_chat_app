@@ -2,6 +2,7 @@
   "name": "real-time-chat-app",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:5033",
   "dependencies": {
     "@emotion/core": "^11.0.0",
     "@emotion/react": "^11.5.0",
@@ -23,6 +24,7 @@
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.0",
     "bootstrap": "^5.1.1",
+    "compressorjs": "^1.1.1",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
@@ -30,10 +32,12 @@
     "material-icons": "^1.10.1",
     "mui-alert": "^1.0.0-beta4",
     "mysql": "^2.18.1",
+    "prop-types": "^15.7.2",
     "qs": "^6.10.1",
     "react": "^17.0.2",
     "react-alert": "^7.0.3",
     "react-alert-template-basic": "^1.0.2",
+    "react-avatar": "^3.10.0",
     "react-bootstrap": "^2.0.0-rc.1",
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.6",
@@ -69,6 +73,7 @@
     ]
   },
   "devDependencies": {
+    "@types/cors": "^2.8.12",
     "@types/qs": "^6.9.7",
     "@types/react-router-dom": "^5.3.1",
     "babel-core": "^6.26.3",
