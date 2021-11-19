@@ -18,7 +18,7 @@ class MessageSnackbar extends React.Component<any, {
             <Stack>
                 <Snackbar
                     open={this.props.isOpen}
-                    autoHideDuration={3000}
+                    autoHideDuration={this.props.autoHideDuration !== undefined ? this.props.autoHideDuration : 3000}
                     onClose={this.props.closeMessage}
                     anchorOrigin={{vertical:'top', horizontal: 'right'}}
                 >

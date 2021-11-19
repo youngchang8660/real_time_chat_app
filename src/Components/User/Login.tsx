@@ -46,7 +46,6 @@ class Login extends React.Component<any, {
             .then(res => {
                 if(res.status === 200) {
                     let data: any = res.data;
-                    console.log(data)
                     localStorage.setItem('user_id', data.user_id)
                     localStorage.setItem('first_name', data.first_name)
                     localStorage.setItem('last_name', data.last_name)

@@ -4,6 +4,7 @@ const app = express();
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const cors = require('cors');
+const { nextTick } = require('process');
 
 app.use(cors());
 app.use(express.json({limit: '50mb'}))
@@ -128,15 +129,14 @@ app.put('/api/updateUser', async (req, res) => {
         let query = "CALL Update_User_Info (?, ?, ?, ?)";
         connection.query(query, [userID, firstName, lastName, userPictureBuffer], (err, result) => {
             if(err) {
-                console.log(err.message)
-                return res.status(500).send(err.message);
+                res.status(500).send('Your image is too big. Select different image.')
             } else {
                 return res.status(200).send(result[0]);
             }
         })
     }catch(err) {
         console.log(err.message, 'failed to update user info')
-        return res.status(500).send(err.message);
+        return res.status(500).json(err.message);
     }
 })
 

@@ -3,6 +3,7 @@ import Button from '@mui/material/Button';
 import axios from "axios";
 import qs from 'qs';
 import Avatar from 'react-avatar';
+import MessageSnackbar from '../Reusable/MessageSnackbar';
 
 class Profile extends React.Component<any, {
     server: any,
@@ -12,6 +13,9 @@ class Profile extends React.Component<any, {
     email: any,
     imgContent: any,
     imgDisplay: any,
+    snackbarMessage: any,
+    isSnackbarOpen: boolean,
+    status: number,
 }>{
     constructor(props: any) {
         super(props);
@@ -22,7 +26,10 @@ class Profile extends React.Component<any, {
             lastName: '',
             email: '',
             imgContent: '',
-            imgDisplay: ''
+            imgDisplay: '',
+            snackbarMessage: "",
+            isSnackbarOpen: false,
+            status: 0,
         }
     }
 
@@ -120,52 +127,75 @@ class Profile extends React.Component<any, {
         axios(options)
             .then(res => {
                 if(res.status === 200) {
-                    this.fetchUserInfo();
+                    this.setState({
+                        snackbarMessage: 'Successfully updated new profile',
+                        isSnackbarOpen: true,
+                        status: 200,
+                    }, () => {
+                        this.fetchUserInfo();
+                    })
                 }
             }) .catch(err => {
-                console.log(err.message)
+                if(err.response.status === 500) {
+                    console.log(err.response.data)
+                    this.setState({
+                        snackbarMessage: err.response.data,
+                        isSnackbarOpen: true,
+                        status: err.response.status,
+                    }, () => {
+                        this.fetchUserInfo();
+                    })
+                }
             })
+    }
+
+    closeMessage = () => {
+        this.setState({
+            isSnackbarOpen: false
+        })
     }
 
     render() {
         let { firstName, lastName, userID, email, imgDisplay } = this.state;
         return (
             <div className="container">
-                <form className="mt-5">
-                    <div style={{fontSize: '24px', marginBottom: '30px'}}>Edit Profile</div>
-                    {imgDisplay !== "" ? (
-                        <div onClick={this.onClickSelectImage} style={{width: '150px', height: '150px', cursor: 'pointer'}}>
-                            <img 
-                                alt="userProfileImage" 
-                                className="profile-image" 
-                                style={{width: '150px', height: '150px'}}
-                                src={this.state.imgDisplay}
-                            />
-                            <input 
-                                type="file"
-                                name="imgContent"
-                                id="upload-button"
-                                accept="image/*"
-                                key={Math.random()}
-                                onChange={this.handleChange}
-                                hidden
-                            /> 
-                        </div>
-                    ):(
-                        <div onClick={this.onClickSelectImage} style={{width: '150px', height: '130px', cursor: 'pointer'}}>
-                            <Avatar name={`${firstName} ${lastName}`} size="130" />
-                            <input 
-                                type="file"
-                                name="imgContent"
-                                id="upload-button"
-                                accept="image/*"
-                                key={Math.random()}
-                                onChange={this.handleChange}
-                                hidden
-                            /> 
-                        </div>
+                <form className="mt-3">
+                    <div style={{fontSize: '24px', marginBottom: '30px', display: 'flex', justifyContent: 'center'}}>Edit Profile</div>
+                    <div style={{display: 'flex', justifyContent: 'center'}}>
+                        {imgDisplay !== "" ? (
+                            <div onClick={this.onClickSelectImage} style={{width: '150px', height: '150px', cursor: 'pointer'}}>
+                                <img 
+                                    alt="userProfileImage" 
+                                    className="profile-image" 
+                                    style={{width: '150px', height: '150px'}}
+                                    src={this.state.imgDisplay}
+                                />
+                                <input 
+                                    type="file"
+                                    name="imgContent"
+                                    id="upload-button"
+                                    accept="image/*"
+                                    key={Math.random()}
+                                    onChange={this.handleChange}
+                                    hidden
+                                /> 
+                            </div>
+                        ):(
+                            <div onClick={this.onClickSelectImage} style={{width: '150px', height: '130px', cursor: 'pointer'}}>
+                                <Avatar name={`${firstName} ${lastName}`} size="130" />
+                                <input 
+                                    type="file"
+                                    name="imgContent"
+                                    id="upload-button"
+                                    accept="image/*"
+                                    key={Math.random()}
+                                    onChange={this.handleChange}
+                                    hidden
+                                /> 
+                            </div>
                     )}
-                    <div className="row d-flex flex-wrap mt-3" style={{fontSize: '16px'}}>
+                    </div>
+                    <div className="row d-flex flex-wrap justify-content-center mt-3" style={{fontSize: '16px'}}>
                         <div className="col-12 col-sm-4 col-md-4 col-lg-3 col-xl-3 d-flex flex-column">
                             <label className="mb-2">First Name</label>
                             <input 
@@ -185,24 +215,31 @@ class Profile extends React.Component<any, {
                             />
                         </div>
                     </div>
-                    <div className="row d-flex flex-wrap mt-3" style={{fontSize: '16px'}}>
+                    <div className="row d-flex flex-wrap justify-content-center mt-3" style={{fontSize: '16px'}}>
                         <div className="col-12 col-sm-8 col-md-8 col-lg-6 col-xl-6 d-flex flex-column">
                             <label className="mb-2">Email</label>
                             <input defaultValue={email} disabled required id="email" style={{height: '40px'}}/>
                         </div>
                     </div>
-                    <div className="row d-flex flex-wrap mt-3" style={{fontSize: '16px'}}>
-                        <div className="col-12 col-sm-4 col-md-4 col-lg-3 col-xl-3 d-flex flex-column">
+                    <div className="row d-flex flex-wrap justify-content-center mt-3" style={{fontSize: '16px'}}>
+                        <div className="col-12 col-sm-8 col-md-8 col-lg-6 col-xl-6 d-flex flex-column">
                             <label className="mb-2">User ID</label>
                             <input defaultValue={userID} disabled id="userID" style={{height: '40px'}}/>
                         </div>
                     </div>
-                    <div className="row mt-5">
+                    <div className="row d-flex justify-content-center mt-3">
                         <div className="col-6">
                             <Button onClick={this.onSubmit} variant="contained">SAVE</Button>
                         </div>
                     </div>
                 </form>
+                <MessageSnackbar 
+                    autoHideDuration={6000}
+                    message={this.state.snackbarMessage}
+                    isOpen={this.state.isSnackbarOpen}
+                    messageStatus={this.state.status}
+                    closeMessage={this.closeMessage}
+                />
             </div>
         )
     }

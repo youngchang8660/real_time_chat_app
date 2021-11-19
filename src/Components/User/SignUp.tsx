@@ -73,43 +73,59 @@ class SignUp extends React.Component<any, {
 
     signUpNewUser = () => {
         let { user_id, first_name, last_name, email, password, password_confirm } = this.state;
-        let url = ('http://localhost:5032/api/signUpNewUser');
-        let data = {
-            'user_id': user_id,
-            'first_name': first_name,
-            'last_name': last_name,
-            'email': email,
-            'password': password,
-            'password_confirm': password_confirm
-        };
-        console.log(data)
-        const options: any = {
-            method: 'POST',
-            headers: { 'content-type': 'application/x-www-form-urlencoded' },
-            data: qs.stringify(data),
-            url,
-          };
-        axios(options)
-            .then(res => {
-                if(res.status === 200) {
-                    this.setState({
-                        messageSnackbarString: 'Congratulations! Your are successfully registered. Moving to Log in page...',
-                        isSnackbarOpen: true,
-                        status: res.status,
-                        isSuccessfullySignedUp: true,
-                    })
-                }
+        let isEmailValid = this.validateEmail(email);
+        console.log(isEmailValid)
+        if(isEmailValid) {
+            let url = ('http://localhost:5032/api/signUpNewUser');
+            let data = {
+                'user_id': user_id,
+                'first_name': first_name,
+                'last_name': last_name,
+                'email': email,
+                'password': password,
+                'password_confirm': password_confirm
+            };
+    
+            const options: any = {
+                method: 'POST',
+                headers: { 'content-type': 'application/x-www-form-urlencoded' },
+                data: qs.stringify(data),
+                url,
+              };
+            axios(options)
+                .then(res => {
+                    if(res.status === 200) {
+                        this.setState({
+                            messageSnackbarString: 'Congratulations! Your are successfully registered. Moving to Log in page...',
+                            isSnackbarOpen: true,
+                            status: res.status,
+                            isSuccessfullySignedUp: true,
+                        })
+                    }
+                })
+                .catch((err) => {
+                    if(err.response.status === 500) {
+                        this.setState({
+                            messageSnackbarString: err.response.data,
+                            isSnackbarOpen: true,
+                            status: err.response.status
+                        })
+                    }
+                })
+        } else {
+            this.setState({
+                messageSnackbarString: 'Your email is not valid.',
+                isSnackbarOpen: true,
+                status: 400
             })
-            .catch((err) => {
-                if(err.response.status === 500) {
-                    this.setState({
-                        messageSnackbarString: err.response.data,
-                        isSnackbarOpen: true,
-                        status: err.response.status
-                    })
-                }
-            })
+        }
     }
+
+    validateEmail = (email: any) => {
+        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(email).toLowerCase());
+    }
+    
 
     closeMessage = () => {
         this.setState({
