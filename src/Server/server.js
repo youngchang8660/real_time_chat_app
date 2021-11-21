@@ -124,7 +124,6 @@ app.put('/api/updateUser', async (req, res) => {
     } else {
         userPictureBuffer = Buffer.from(imgContent,'hex')
     }
-    console.log(userPictureBuffer)
     try {
         let query = "CALL Update_User_Info (?, ?, ?, ?)";
         connection.query(query, [userID, firstName, lastName, userPictureBuffer], (err, result) => {
@@ -136,6 +135,105 @@ app.put('/api/updateUser', async (req, res) => {
         })
     }catch(err) {
         console.log(err.message, 'failed to update user info')
+        return res.status(500).json(err.message);
+    }
+})
+
+// search user by user_id
+app.get('/api/getUserByID/:userID/:friendID', async (req, res) => {
+    let { userID, friendID } = req.params;
+    console.log(userID)
+    console.log(friendID)
+    if(friendID !== "") {
+        try {
+            let query = "CALL Search_User_By_ID (?, ?)";
+            connection.query(query, [userID, friendID], (err, result) => {
+                if(err) {
+                    console.log(err.message)
+                    res.status(500).send('Failed to fetch friends list.')
+                } else {
+                    return res.status(200).send(result[0]);
+                }
+            })
+        } catch(err) {
+            console.log(err.message, 'failed to fetch friends by id')
+            return res.status(500).json(err.message);
+        }
+    }
+})
+
+// send friend request
+app.post('/api/sendFriendRequest', async (req, res) => {
+    let { sender, receiver, status } = req.body;
+    try {
+        let query = "CALL Send_Friend_Request (?, ?, ?)";
+        connection.query(query, [sender, receiver, status], (err, result) => {
+            if(err) {
+                console.log(err.message)
+                return res.status(500).send('Request already sent')
+            } else {
+                return res.status(200).send('Request just sent.')
+            }
+        })
+    }catch(err) {
+        console.log(err.message, 'failed to send Friend Request')
+        return res.status(500).json(err.message);
+    }
+})
+
+// Get all pending requests (received)
+app.get('/api/getPendingRequests/:userID', async (req, res) => {
+    let userID = req.params.userID;
+    try {
+        let query = "CALL Get_Pending_Requests (?)";
+        connection.query(query, [userID], (err, result) => {
+            if(err) {
+                return res.status(500).send('failed to fetch pending requests')
+            } else {
+                return res.status(200).send(result[0])
+            }
+        })
+    }catch(err) {
+        console.log(err.message, 'failed to fetch pending requests')
+        return res.status(500).json(err.message);
+    }
+})
+
+// Accept or reject friend request
+app.put('/api/acceptOrRejectRequest', async (req, res) => {
+    let { requestID, status } = req.body;
+    try {
+        let query = "CALL Accept_Reject_Friend_Request (?, ?)";
+        connection.query(query, [requestID, status], (err, result) => {
+            if(err) {
+                console.log(err.message)
+                return res.status(500).send('Failed to answer to request')
+            } else {
+                return res.status(200).send(result[0])
+            }
+        })
+    }catch(err) {
+        console.log(err.message, 'Failed to answer to request')
+        return res.status(500).json(err.message);
+    }
+})
+
+// Get all my friends list
+app.get('/api/getMyFriends/:userID', async(req, res) => {
+    let { userID } = req.params;
+    console.log(userID)
+    try {
+        let query = "CALL Get_All_My_Friends (?)";
+        connection.query(query, [userID], (err, result) => {
+            if(err) {
+                console.log(err.message)
+                return res.status(500).send('Failed to fetch all my friends list')
+            } else {
+                return res.status(200).send(result[0])
+            }
+        })
+    }catch(err) {
+        console.log(err.message, 'failed to fetch pending requests')
         return res.status(500).json(err.message);
     }
 })

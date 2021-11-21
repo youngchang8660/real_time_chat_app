@@ -5,7 +5,7 @@
 -- 	DECLARE myCount INT DEFAULT 0;
 -- 	SET myCount = (SELECT COUNT(*) FROM Users WHERE user_id = userId);
 -- 	IF (myCount = 1) THEN
---     SELECT email, first_name, last_name, user_image FROM Users WHERE user_id = userId;
+--     SELECT user_unique_id, email, first_name, last_name, user_image FROM Users WHERE user_id = userId;
 --     END IF;
 -- END //
 

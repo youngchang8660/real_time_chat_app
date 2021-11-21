@@ -1,0 +1,7 @@
+-- USE chat_app_db;
+-- CREATE TABLE Friend_Requests (
+-- 	request_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+--     user_one VARCHAR(50) NOT NULL,
+--     user_two VARCHAR(50) NOT NULL,
+--     status INT NOT NULL
+-- )

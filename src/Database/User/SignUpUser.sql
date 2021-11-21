@@ -1,11 +1,14 @@
 -- DELIMITER //
 
--- CREATE PROCEDURE SignUp_New_User(new_user_id varchar(100), new_email varchar(100), new_first_name varchar(100), new_last_name varchar(100), new_user_image BLOB, new_password varchar(100), new_password_confirm varchar(100))
+-- CREATE PROCEDURE SignUp_New_User(new_user_id varchar(50), new_email varchar(50), new_first_name varchar(50), new_last_name varchar(50), new_user_image BLOB, new_password varchar(100), new_password_confirm varchar(100))
 -- BEGIN
+--     DECLARE rnd_str text;
 -- 	DECLARE myCount INT DEFAULT 0;
--- 	SET myCount = (SELECT COUNT(*) FROM Users WHERE user_id = new_user_id);
+-- 	SET rnd_str := lpad(conv(floor(rand()*pow(36,6)), 10, 36), 6, 0);
+-- 	SET myCount = (SELECT COUNT(*) FROM Users WHERE user_id = new_user_id OR user_unique_id = rnd_str);
 -- 	IF (myCount = 0) THEN
 -- 	INSERT INTO Users (
+-- 		user_unique_id,
 -- 		user_id,
 -- 		email,
 --         first_name,
@@ -14,6 +17,7 @@
 -- 		password,
 -- 		password_confirm
 -- 	) VALUES (
+-- 		rnd_str,
 -- 		new_user_id,
 --         new_email,
 -- 		new_first_name,

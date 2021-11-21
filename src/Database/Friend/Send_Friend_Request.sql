@@ -1,0 +1,23 @@
+-- DELIMITER //
+
+-- CREATE PROCEDURE Send_Friend_Request(sender VARCHAR(50), receiver VARCHAR(50), status INT)
+-- BEGIN
+-- 	DECLARE isExist INT DEFAULT 0;
+-- 	SET isExist = (SELECT NOT EXISTS (SELECT * FROM Friend_Requests WHERE user_one = sender and user_two = receiver));
+--     IF isExist = 1 THEN
+-- 		INSERT INTO Friend_Requests (
+-- 			user_one,
+--             user_two,
+--             status
+--         ) VALUES (
+-- 			sender,
+--             receiver,
+--             status
+--         );
+-- 	ELSE 
+--     SIGNAL SQLSTATE '45000'
+--     SET MESSAGE_TEXT = 'Request already sent';
+--     END IF;
+-- END //
+
+-- DELIMITER ;

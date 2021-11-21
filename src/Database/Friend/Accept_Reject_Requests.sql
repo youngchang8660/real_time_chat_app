@@ -1,0 +1,29 @@
+-- DELIMITER //
+
+-- CREATE PROCEDURE Accept_Reject_Friend_Request(requestID INT, status INT)
+-- BEGIN
+-- 	DECLARE userID VARCHAR(50);
+--     DECLARE friendID VARCHAR(50);
+-- 	IF EXISTS (SELECT * FROM Friend_Requests WHERE request_id = requestID) THEN
+-- 		IF status = 1 THEN
+-- 			SET userID = (SELECT user_one FROM Friend_Requests WHERE request_id = requestID);
+--             SET friendID = (SELECT user_two FROM Friend_Requests WHERE request_id = requestID);
+-- 			UPDATE Friend_Requests
+--             SET status = 1
+--             WHERE request_id = requestID;
+--             INSERT INTO Friendship (
+-- 				user_one,
+--                 user_two
+--             )VALUE (
+-- 				userID,
+--                 friendID
+--             );
+--         ELSE
+-- 			UPDATE Friend_Requests
+--             SET status = 2
+--             WHERE request_id = requestID;
+-- 		END IF;
+--     END IF;
+-- END //
+
+-- DELIMITER ;

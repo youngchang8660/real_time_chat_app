@@ -137,4 +137,234 @@ and (orientation: landscape) {
   }
 }
 
-/******************** Profile Setting *******************/
+/******************** Friends *************************/
+.friendsTopNav {
+  height: 50px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.friendsTopNavButtonContainer {
+  margin-left: 2rem;
+}
+
+.friendsTopNavButton {
+  background-color: white;
+}
+
+.friendsTopNavButton:hover {
+  background-color: #f3f3f4;
+}
+
+#add{
+  padding: 17px;
+  width: 300px;
+  height: 30px;
+  font-size: 13px;
+  background-color: #f5f5f5;
+  outline: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+#allHeader {
+  padding: 17px;
+  width: 300px;
+  height: 30px;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  outline: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+#friend-search-bar {
+  width: 100%;
+  background-color: #f5f5f5;
+  border: none;
+  outline: none;
+  font-size: 20px;
+}
+
+.friend-search-button {
+  background-color: #f5f5f5;
+}
+
+.friendsBody {
+  margin-top: 30px;
+  width: 100%;
+  height: auto;
+  min-height: 500px;
+}
+
+.friendRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+  width: 100%;
+  padding: 10px 0px;
+  border-top: 1px solid gray;
+}
+
+.friend-profile-image {
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+}
+
+.friend-user-id {
+  margin-left: 1rem;
+  font-size: 18px;
+}
+
+.friend-chat-icon-container {
+  width: 50px;
+  height: 56px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 1em;
+  cursor: pointer;
+}
+
+.friend-add-button-container, .friend-accept-button-container, .friend-reject-button-container {
+  margin: 10px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.friend-add-button, .friend-accept-button, .friend-reject-button {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 10rem;
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.15rem;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  width: 70px;
+}
+
+.friend-accept-button, .friend-reject-button {
+  width: 100% !important;
+}
+
+.friend-add-button:after, .friend-accept-button:after, .friend-reject-button:after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #0cf;
+  border-radius: 10rem;
+  z-index: -2;
+}
+
+.friend-reject-button:after {
+  background-color: #ffcff1 !important;
+}
+
+.friend-add-button:before, .friend-accept-button:before, .friend-reject-button:before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0%;
+  height: 100%;
+  background-color: #008fb3;
+  transition: all 0.3s;
+  border-radius: 10rem;
+  z-index: -1;
+}
+
+.friend-reject-button:before {
+  background-color: #ff69b4 !important;
+}
+
+.friend-add-button:hover, .friend-accept-button:hover, .friend-reject-button:hover {
+  color: #fff;
+}
+
+.friend-add-button:hover:before, .friend-accept-button:hover:before, .friend-reject-button:hover:before {
+  width: 100%;
+}
+
+.friend-request-sent {
+  display: inline-block;
+  padding: 0.5rem 0.8rem;
+  border-radius: 10rem;
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.15rem;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  background-color: gray;
+  width: 70px;
+}
+
+@media (max-width: 414px) {
+  #add {
+    width: 100%;
+  }
+
+  .friend-profile-image {
+    width: 60px;
+    height: 60px;
+  }
+
+  .friend-user-id {
+    font-size: 14px;
+    margin-left: 5px;
+  }
+
+  .friend-add-button-container, .friend-accept-button-container, .friend-reject-button-container {
+    width: 100%;
+    text-align: center;
+    margin: 0px;
+  }
+
+  .friend-add-button {
+    display: inline-block;
+    border-radius: 10rem;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .friend-accept-button-container, .friend-reject-button-container  {
+    width: 70px;
+  }
+
+  .friend-accept-button, .friend-reject-button {
+    width: 60px;
+    font-size: 0.7rem;
+    padding: 0.5rem 0.5rem;
+  }
+}

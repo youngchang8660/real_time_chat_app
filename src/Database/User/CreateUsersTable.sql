@@ -1,11 +1,11 @@
 -- USE chat_app_db;
 -- CREATE TABLE Users (
---     user_unique_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+--     user_unique_id VARCHAR(50) NOT NULL PRIMARY KEY,
 --     user_id VARCHAR(50) DEFAULT '' NOT NULL,
 --     email VARCHAR(50) DEFAULT '' NOT NULL,
 --     first_name VARCHAR(50) NOT NULL,
 --     last_name VARCHAR(50) NOT NULL,
---     user_image LONGBLOB, // or VARBINARY
+--     user_image LONGBLOB,
 --     password VARCHAR(100) DEFAULT '' NOT NULL,
 --     password_confirm VARCHAR(100) DEFAULT '' NOT NULL
 -- )
