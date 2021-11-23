@@ -98,7 +98,6 @@ class FriendsList extends React.Component<any, {
         axios.get(`${server}/api/getPendingRequests/${userID}`)
             .then((res: any) => {
                 pendingRequestsData = res.data.filter((d: any) => d.status === 0)
-                console.log(pendingRequestsData)
                 for(let i = 0; i < pendingRequestsData.length; i++) {
                     if(pendingRequestsData[i].user_image !== null) {
                         pendingRequestsData[i].user_image = this.convertBufferArrayToDataURL(pendingRequestsData[i].user_image.data);
@@ -124,7 +123,6 @@ class FriendsList extends React.Component<any, {
         };
         axios.put(`${server}/api/acceptOrRejectRequest`, insertData)
             .then(res => {
-                console.log(res.data)
                 this.getAllPendingRequests();
             })
     }
@@ -140,7 +138,6 @@ class FriendsList extends React.Component<any, {
         let searchedUsersData: any = [];
         axios.get(`${server}/api/getUserByID/${userID}/${friendUserID}`)
             .then(res => {
-                console.log(res.data)
                 searchedUsersData = res.data;
                 for(let i = 0; i < searchedUsersData.length; i++) {
                     if(searchedUsersData[i].user_image !== null) {
@@ -174,6 +171,20 @@ class FriendsList extends React.Component<any, {
             })
     }
 
+    onClickCancelRequest = (data: any) => {
+        let { server } = this.state;
+        let userID = this.state.userID;
+        let friendID = data.user_id;
+        axios.delete(`${server}/api/cancelFriendRequest/${userID}/${friendID}`)
+            .then(res => {
+                this.onClickFriendSearchByID();
+            }).catch(err => {
+                if(err.response.status === 500) {
+                    console.log(err.response.data)
+                }
+            })
+    }
+
     render() {
         let { currentTab, friendsData, pendingRequestsData, searchedUsersData } = this.state;
         return (
@@ -189,21 +200,6 @@ class FriendsList extends React.Component<any, {
                         <button className="friendsTopNavButton" onClick={() => this.onClickCurrentTab('New')}>New</button>
                     </div>
                 </div>
-                {/* {currentTab === 'New' ? (
-                    <div id='add'>
-                        <input 
-                            id="friend-search-bar"
-                            placeholder="Search for friends"
-                            onChange={(e) => {this.onChangeFriendSearch(e)}}
-                            style={{width: '90%'}}
-                        />
-                        <button className="friend-search-button" type="submit">
-                            <SearchIcon onClick={this.onClickFriendSearchByID} />
-                        </button>
-                    </div>
-                ):(
-                    <></>
-                )} */}
                 {currentTab === 'New' ? (
                     <div id='add'>
                         <input 
@@ -325,7 +321,7 @@ class FriendsList extends React.Component<any, {
                                             {user.status != 0 ? (
                                                 <button className="friend-add-button" onClick={() => {this.onClickSendRequest(user)}}>Add</button>
                                             ):(
-                                                <button disabled className="friend-request-sent">Sent</button>
+                                                <button className="friend-request-sent" onClick={() => {this.onClickCancelRequest(user)}}>Sent</button>
                                             )}
                                         </div>
                                     </div>

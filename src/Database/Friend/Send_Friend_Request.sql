@@ -1,9 +1,9 @@
 -- DELIMITER //
 
--- CREATE PROCEDURE Send_Friend_Request(sender VARCHAR(50), receiver VARCHAR(50), status INT)
+-- CREATE PROCEDURE Send_Friend_Request(sender VARCHAR(50), recipient VARCHAR(50), status INT)
 -- BEGIN
 -- 	DECLARE isExist INT DEFAULT 0;
--- 	SET isExist = (SELECT NOT EXISTS (SELECT * FROM Friend_Requests WHERE user_one = sender and user_two = receiver));
+-- 	SET isExist = (SELECT NOT EXISTS (SELECT * FROM Friend_Requests WHERE user_one = sender and user_two = recipient));
 --     IF isExist = 1 THEN
 -- 		INSERT INTO Friend_Requests (
 -- 			user_one,
@@ -11,7 +11,7 @@
 --             status
 --         ) VALUES (
 -- 			sender,
---             receiver,
+--             recipient,
 --             status
 --         );
 -- 	ELSE 

@@ -18,6 +18,9 @@
 -- 				userID,
 --                 friendID
 --             );
+--             IF (EXISTS (SELECT * FROM Friend_Requests WHERE user_one = friendID and user_two = userID)) THEN
+-- 				DELETE FROM Friend_Requests WHERE user_one = friendID and user_two = userID;
+--                 END IF;
 --         ELSE
 -- 			UPDATE Friend_Requests
 --             SET status = 2
@@ -25,5 +28,3 @@
 -- 		END IF;
 --     END IF;
 -- END //
-
--- DELIMITER ;

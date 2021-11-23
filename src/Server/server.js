@@ -142,8 +142,6 @@ app.put('/api/updateUser', async (req, res) => {
 // search user by user_id
 app.get('/api/getUserByID/:userID/:friendID', async (req, res) => {
     let { userID, friendID } = req.params;
-    console.log(userID)
-    console.log(friendID)
     if(friendID !== "") {
         try {
             let query = "CALL Search_User_By_ID (?, ?)";
@@ -177,6 +175,27 @@ app.post('/api/sendFriendRequest', async (req, res) => {
         })
     }catch(err) {
         console.log(err.message, 'failed to send Friend Request')
+        return res.status(500).json(err.message);
+    }
+})
+
+// cancel sent friend requests
+app.delete('/api/cancelFriendRequest/:userID/:friendID', async (req, res) => {
+    let { userID, friendID } = req.params;
+    console.log(userID)
+    console.log(friendID)
+    try {
+        let query = "CALL Cancel_Friend_Request (?, ?)";
+        connection.query(query, [userID, friendID], (err, result) => {
+            if(err) {
+                console.log(err.message)
+                return res.status(500).send('Cant cancel friend request')
+            } else {
+                return res.status(200).send('Request just canceled.')
+            }
+        })
+    }catch(err) {
+        console.log(err.message, 'failed to cancel Friend Request')
         return res.status(500).json(err.message);
     }
 })
@@ -221,7 +240,6 @@ app.put('/api/acceptOrRejectRequest', async (req, res) => {
 // Get all my friends list
 app.get('/api/getMyFriends/:userID', async(req, res) => {
     let { userID } = req.params;
-    console.log(userID)
     try {
         let query = "CALL Get_All_My_Friends (?)";
         connection.query(query, [userID], (err, result) => {
