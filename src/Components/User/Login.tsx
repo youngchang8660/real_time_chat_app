@@ -78,26 +78,53 @@ class Login extends React.Component<any, {
                     <div className="containerTitle">
                         <h2>Login</h2>
                     </div>
-                    <div>
+                    <div className="mb-3">
                         <label className="mb-2 signInLabel">ID</label>
                         <TextField 
-                            variant="outlined"
+                            variant="standard"
                             onChange={(e) => {this.setState({ userID: e.currentTarget.value })}}
                             className="col-12"
                             required
+                            inputProps={{ 
+                                style: { 
+                                    fontFamily: 'Arial', 
+                                    color: 'white', 
+                                    border: 'none',
+                                    height: '50px',
+                                    margin: 'none',
+                                    backgroundColor: '#202225'
+                                }
+                            }}
                         />
                     </div>
                     <div>
                         <label className="mb-2 signInLabel">Password</label>
                         <TextField 
-                            variant="outlined"
+                            variant="standard"
                             onChange={(e) => {this.setState({ password: e.currentTarget.value })}}
                             className="col-12"
                             required
+                            inputProps={{ 
+                                style: { 
+                                    fontFamily: 'Arial', 
+                                    color: 'white', 
+                                    border: 'none',
+                                    height: '50px',
+                                    margin: 'none',
+                                    backgroundColor: '#202225'
+                                }
+                            }}
                         />
                     </div>
-                    <div className="mt-3">
-                        <Button className="signInButton" variant="outlined" style={{fontSize: '16px', fontWeight: 'bold' }} onClick={this.clickLogin}>Log In</Button>
+                    <div className="mt-5">
+                        <Button 
+                            className="signInButton" 
+                            variant="outlined" 
+                            style={{fontSize: '16px', fontWeight: 'bold', color: 'white', backgroundColor: '#202225', border: 'none' }} 
+                            onClick={this.clickLogin}
+                        >
+                            Log In
+                        </Button>
                     </div>
                     <h5 className="signInHorizontalLine"><span>Or</span></h5>
                     <div style={{width: '100%', display: 'flex', justifyContent: 'center'}}>

@@ -4,7 +4,10 @@ const app = express();
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const cors = require('cors');
-const { nextTick } = require('process');
+const http = require('http');
+const socketIo = require("socket.io");
+const server = http.createServer(app);
+const io = socketIo(server);
 
 app.use(cors());
 app.use(express.json({limit: '50mb'}))
@@ -30,6 +33,25 @@ connection.connect((err) => {
     if(err) throw err;
     console.log('db connected')
 })
+
+/*************** socket io *******************/
+
+// let interval;
+// io.on("connection", (socket) => {
+//   console.log("New client connected");
+//   if (interval) {
+//     clearInterval(interval);
+//   }
+// //   interval = setInterval(() => getApiAndEmit(socket), 1000);
+//   socket.on("disconnect", () => {
+//     console.log("Client disconnected");
+//     clearInterval(interval);
+//   });
+// });
+
+// const getAllChats = socket => {
+    
+// }
 
 // Register new users
 app.post('/api/signUpNewUser', async (req, res) => {
@@ -182,8 +204,6 @@ app.post('/api/sendFriendRequest', async (req, res) => {
 // cancel sent friend requests
 app.delete('/api/cancelFriendRequest/:userID/:friendID', async (req, res) => {
     let { userID, friendID } = req.params;
-    console.log(userID)
-    console.log(friendID)
     try {
         let query = "CALL Cancel_Friend_Request (?, ?)";
         connection.query(query, [userID, friendID], (err, result) => {
@@ -252,6 +272,46 @@ app.get('/api/getMyFriends/:userID', async(req, res) => {
         })
     }catch(err) {
         console.log(err.message, 'failed to fetch pending requests')
+        return res.status(500).json(err.message);
+    }
+})
+
+/********************* Chats *************************/
+
+// create new chat
+app.post('/api/createNewChat/:userOne/:userTwo', async (req, res) => {
+    let { userOne, userTwo } = req.params;
+    try {
+        let query = "CALL Create_Chat_Room (?, ?)";
+        connection.query(query, [userOne, userTwo], (err, result) => {
+            if(err) {
+                console.log(err.message)
+                return res.status(500).send('Failed to create new chat')
+            } else {
+                return res.status(200).send(result[0])
+            }
+        })
+    }catch(err) {
+        console.log(err.message, 'failed to create new chat')
+        return res.status(500).json(err.message);
+    }
+})
+
+// get all my chats
+app.get('/api/getAllChats/:userID', async (req, res) => {
+    let { userID } = req.params;
+    try {
+        let query = "CALL Get_All_My_Chats (?)";
+        connection.query(query, [userID], (err, result) => {
+            if(err) {
+                console.log(err.message);
+                return res.status(500).send('Failed to fetch all chats');
+            } else {
+                return res.status(200).send(result[0]);
+            }
+        })
+    }catch(err) {
+        console.log(err.message, 'failed to fetch all chats');
         return res.status(500).json(err.message);
     }
 })

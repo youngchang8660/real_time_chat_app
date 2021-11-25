@@ -14,6 +14,7 @@ import Chat from './Components/App/Chat';
 import Profile from './Components/App/Profile';
 import FriendsList from './Components/App/FriendsList';
 import { Redirect } from 'react-router-dom';
+import { CustomProvider } from 'rsuite';
 
 class App extends React.Component<any, {
 
@@ -31,7 +32,7 @@ class App extends React.Component<any, {
 
   render() {
     return (
-      <div>
+      <div style={{backgroundColor: '#36393e'}}>
         <Router>
           <Switch>
             <React.Fragment>
@@ -39,8 +40,10 @@ class App extends React.Component<any, {
               <Route exact path="/" render={() => <Redirect to="/login" />} />
               <Route exact path="/login" component={Login} />
               <div style={{display: 'flex'}}>
-                <InnerSideNav />
-                <Route exact path="/chatApp/chat" component={Chat} />
+                <CustomProvider theme="dark">
+                  <InnerSideNav />
+                </CustomProvider>
+                <Route exact path="/chatApp/chat/:chat_id?" component={Chat} />
                 <Route exact path="/chatApp/profile" component={Profile} />
                 <Route exact path="/chatApp/friends" component={FriendsList} />
               </div>

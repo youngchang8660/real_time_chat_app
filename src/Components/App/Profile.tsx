@@ -86,10 +86,10 @@ class Profile extends React.Component<any, {
         }
         
         var reader = new FileReader();
-        let converted = new Array();
+        let converted:any = [];
         reader.readAsArrayBuffer(target);
         reader.onloadend = function (evt: any) {
-            if (evt.target.readyState == FileReader.DONE) {
+            if (evt.target.readyState === FileReader.DONE) {
                 var arrayBuffer = evt.target.result,
                 array = new Uint8Array(arrayBuffer);
                 for (var i = 0; i < array.length; i++) {
@@ -135,7 +135,7 @@ class Profile extends React.Component<any, {
                         this.fetchUserInfo();
                     })
                 }
-            }) .catch(err => {
+            }).catch(err => {
                 if(err.response.status === 500) {
                     console.log(err.response.data)
                     this.setState({
@@ -158,16 +158,19 @@ class Profile extends React.Component<any, {
     render() {
         let { firstName, lastName, userID, email, imgDisplay } = this.state;
         return (
-            <div className="container">
+            <div className="container" style={{color: 'black'}}>
                 <form className="mt-3">
-                    <div style={{fontSize: '24px', marginBottom: '30px', display: 'flex', justifyContent: 'center'}}>Edit Profile</div>
+                    <div 
+                        style={{fontSize: '26px', marginBottom: '30px', display: 'flex', justifyContent: 'center', color: 'white', fontWeight: 700}}
+                    >
+                        Edit Profile
+                    </div>
                     <div style={{display: 'flex', justifyContent: 'center'}}>
                         {imgDisplay !== "" ? (
                             <div onClick={this.onClickSelectImage} style={{width: '150px', height: '150px', cursor: 'pointer'}}>
                                 <img 
                                     alt="userProfileImage" 
                                     className="profile-image" 
-                                    style={{width: '150px', height: '150px'}}
                                     src={this.state.imgDisplay}
                                 />
                                 <input 
@@ -182,7 +185,7 @@ class Profile extends React.Component<any, {
                             </div>
                         ):(
                             <div onClick={this.onClickSelectImage} style={{width: '150px', height: '130px', cursor: 'pointer'}}>
-                                <Avatar name={`${firstName} ${lastName}`} size="130" />
+                                <Avatar name={`${firstName} ${lastName}`} size="130" className="profile-image"/>
                                 <input 
                                     type="file"
                                     name="imgContent"
@@ -197,7 +200,7 @@ class Profile extends React.Component<any, {
                     </div>
                     <div className="row d-flex flex-wrap justify-content-center mt-3" style={{fontSize: '16px'}}>
                         <div className="col-12 col-sm-4 col-md-4 col-lg-3 col-xl-3 d-flex flex-column">
-                            <label className="mb-2">First Name</label>
+                            <label className="mb-2" style={{color: 'white', fontWeight: 700}}>First Name</label>
                             <input 
                                 defaultValue={firstName.charAt(0).toUpperCase() + firstName.slice(1)} 
                                 required id="firstName" 
@@ -206,7 +209,7 @@ class Profile extends React.Component<any, {
                             />
                         </div>
                         <div className="col-12 col-sm-4 col-md-4 col-lg-3 col-xl-3 d-flex flex-column">
-                            <label className="mb-2">Last Name</label>
+                            <label className="mb-2" style={{color: 'white', fontWeight: 700}}>Last Name</label>
                             <input 
                                 defaultValue={lastName.charAt(0).toUpperCase() + lastName.slice(1)} 
                                 required id="lastName" 
@@ -217,18 +220,18 @@ class Profile extends React.Component<any, {
                     </div>
                     <div className="row d-flex flex-wrap justify-content-center mt-3" style={{fontSize: '16px'}}>
                         <div className="col-12 col-sm-8 col-md-8 col-lg-6 col-xl-6 d-flex flex-column">
-                            <label className="mb-2">Email</label>
+                            <label className="mb-2" style={{color: 'white', fontWeight: 700}}>Email</label>
                             <input defaultValue={email} disabled required id="email" style={{height: '40px'}}/>
                         </div>
                     </div>
                     <div className="row d-flex flex-wrap justify-content-center mt-3" style={{fontSize: '16px'}}>
                         <div className="col-12 col-sm-8 col-md-8 col-lg-6 col-xl-6 d-flex flex-column">
-                            <label className="mb-2">User ID</label>
+                            <label className="mb-2" style={{color: 'white', fontWeight: 700}}>User ID</label>
                             <input defaultValue={userID} disabled id="userID" style={{height: '40px'}}/>
                         </div>
                     </div>
                     <div className="row d-flex justify-content-center mt-3">
-                        <div className="col-6">
+                        <div className="col-12 col-sm-8 col-md-8 col-lg-6 col-xl-6">
                             <Button onClick={this.onSubmit} variant="contained">SAVE</Button>
                         </div>
                     </div>

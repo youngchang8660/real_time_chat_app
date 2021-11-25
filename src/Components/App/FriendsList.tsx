@@ -67,6 +67,21 @@ class FriendsList extends React.Component<any, {
         })
     }
 
+    onClickStartConversation = (data: any) => {
+        let { server, userID } = this.state;
+        let userOne = userID;
+        let userTwo = data.user_id;
+        axios.post(`${server}/api/createNewChat/${userOne}/${userTwo}`)
+            .then((res: any) => {
+                if(res.data.length > 0) {
+                    let chat_id = res.data[0].chat_id;
+                    this.props.history.push(`/chatApp/chat/${chat_id}`);
+                }
+            }).catch(err => {
+                console.log(err.message);
+            })
+    }
+
     /*********************** All Friends Tab *******************/
 
     getAllMyFriends = () => {
@@ -138,6 +153,7 @@ class FriendsList extends React.Component<any, {
         let searchedUsersData: any = [];
         axios.get(`${server}/api/getUserByID/${userID}/${friendUserID}`)
             .then(res => {
+                console.log(res.data)
                 searchedUsersData = res.data;
                 for(let i = 0; i < searchedUsersData.length; i++) {
                     if(searchedUsersData[i].user_image !== null) {
@@ -188,7 +204,7 @@ class FriendsList extends React.Component<any, {
     render() {
         let { currentTab, friendsData, pendingRequestsData, searchedUsersData } = this.state;
         return (
-            <div className="container">
+            <div className="container" style={{overflow: 'hidden', height: 'auto'}}>
                 <div className="friendsTopNav">
                     <div className="friendsTopNavButtonContainer">
                         <button className="friendsTopNavButton" onClick={() => this.onClickCurrentTab('All')}>All</button>
@@ -224,7 +240,7 @@ class FriendsList extends React.Component<any, {
                         {friendsData.map(user => {
                             return (
                                 <div className="friendRow" key={Math.random()}>
-                                    <div style={{display: 'flex'}}>
+                                    <div style={{display: 'flex', alignItems: 'center'}}>
                                         {user.user_image !== "" ? (
                                             <img
                                                 alt="userProfileImage" 
@@ -238,10 +254,13 @@ class FriendsList extends React.Component<any, {
                                                 src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
                                             />
                                         )}
-                                        <h1 className="friend-user-id">{user.user_id}</h1>
+                                        <h1 className="friend-user-id">{user.first_name.charAt(0).toUpperCase() + user.first_name.slice(1)}</h1>
                                     </div>
                                     <div style={{display: 'flex'}}>
-                                        <div className="friend-chat-icon-container">
+                                        <div 
+                                            className="friend-chat-icon-container"
+                                            onClick={() => {this.onClickStartConversation(user)}}
+                                        >
                                             <TextsmsIcon />
                                         </div>
                                     </div>
@@ -254,7 +273,7 @@ class FriendsList extends React.Component<any, {
                         {pendingRequestsData.map(user => {
                             return (
                                 <div className="friendRow" key={Math.random()}>
-                                    <div style={{display: 'flex'}}>
+                                    <div style={{display: 'flex', alignItems: 'center'}}>
                                         {user.user_image !== "" ? (
                                             <img
                                                 alt="userProfileImage" 
@@ -297,7 +316,7 @@ class FriendsList extends React.Component<any, {
                         {searchedUsersData.map(user => {
                             return (
                                 <div className="friendRow" key={Math.random()}>
-                                    <div style={{display: 'flex'}}>
+                                    <div style={{display: 'flex', alignItems: 'center'}}>
                                         {user.user_image !== "" ? (
                                             <img
                                                 alt="userProfileImage" 
@@ -318,7 +337,7 @@ class FriendsList extends React.Component<any, {
                                             <TextsmsIcon />
                                         </div>
                                         <div className="friend-add-button-container">
-                                            {user.status != 0 ? (
+                                            {user.status !== 0 ? (
                                                 <button className="friend-add-button" onClick={() => {this.onClickSendRequest(user)}}>Add</button>
                                             ):(
                                                 <button className="friend-request-sent" onClick={() => {this.onClickCancelRequest(user)}}>Sent</button>

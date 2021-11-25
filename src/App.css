@@ -2,7 +2,8 @@
 
 .signUpBody, .signInBody {
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
+  height: auto;
   display: flex;
   justify-content: center;
 }
@@ -12,7 +13,7 @@
   padding: 3%;
   width: 40%;
   height: auto;
-  margin-top: 5%;
+  margin-top: 2%;
   margin-bottom: 3%;
 }
 
@@ -26,9 +27,10 @@
 }
 
 .containerTitle {
-  margin-bottom: 5%;
   font-size: 27px !important;
   font-weight: bold;
+  display: flex;
+  justify-content: center;
 }
 
 .signInHorizontalLine, .signUpHorizontalLine {
@@ -40,12 +42,12 @@
 }
 
 .signInHorizontalLine span {
-  background:#fff; 
+  background:#36393e; 
   padding:0 10px; 
 }
 
 .signUpHorizontalLine span {
-  background:#fff; 
+  background:#36393e; 
   padding:0 10px; 
 }
 
@@ -124,17 +126,28 @@ and (orientation: landscape) {
 .sideNavBody {
   width: 56px;
   height: 100vh;
+  /* background: #191b22; */
 }
 
 .sideNav {
   height: 100%;
   width: 56px;
+  /* background: #191b22; */
+  /* background-color: #191b22 !important; */
 }
 
 @media all and (min-width: 480px) {
   .sideNavBody {
     display: block;
   }
+}
+
+/******************* Edit **************************/
+
+.profile-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
 }
 
 /******************** Friends *************************/
@@ -148,15 +161,12 @@ and (orientation: landscape) {
 }
 
 .friendsTopNavButtonContainer {
-  margin-left: 2rem;
+  margin-left: 1rem;
 }
 
 .friendsTopNavButton {
-  background-color: white;
-}
-
-.friendsTopNavButton:hover {
-  background-color: #f3f3f4;
+  background-color: #36393e;
+  color: white;
 }
 
 #add{
@@ -164,7 +174,7 @@ and (orientation: landscape) {
   width: 300px;
   height: 30px;
   font-size: 13px;
-  background-color: #f5f5f5;
+  background-color: #202225;
   outline: 0;
   display: flex;
   align-items: center;
@@ -184,18 +194,20 @@ and (orientation: landscape) {
   align-items: center;
   justify-content: space-between;
   margin-top: 20px;
+  color: white;
 }
 
 #friend-search-bar {
   width: 100%;
-  background-color: #f5f5f5;
+  /* background-color: #202225; */
+  background-color: #202225;
   border: none;
   outline: none;
   font-size: 20px;
 }
 
 .friend-search-button {
-  background-color: #f5f5f5;
+  background-color: #202225;
 }
 
 .friendsBody {
@@ -211,14 +223,17 @@ and (orientation: landscape) {
   justify-content: space-between;
   flex-direction: row;
   width: 100%;
+  height: 100%;
   padding: 10px 0px;
-  border-top: 1px solid gray;
+  border-top: 1px solid #424549;
+  color: white;
 }
 
 .friend-profile-image {
   border-radius: 50%;
   width: 60px;
   height: 60px;
+  background-color: white;
 }
 
 .friend-user-id {
@@ -327,10 +342,14 @@ and (orientation: landscape) {
   #add {
     width: 100%;
   }
+  
+  .friendsBody {
+    margin-top: 0px;
+  }
 
   .friend-profile-image {
-    width: 60px;
-    height: 60px;
+    width: 40px;
+    height: 40px;
   }
 
   .friend-user-id {
@@ -341,7 +360,7 @@ and (orientation: landscape) {
   .friend-add-button-container, .friend-accept-button-container, .friend-reject-button-container {
     width: 100%;
     text-align: center;
-    margin: 0px;
+    margin-right: 2.5px;
   }
 
   .friend-add-button {
@@ -367,4 +386,95 @@ and (orientation: landscape) {
     font-size: 0.7rem;
     padding: 0.5rem 0.5rem;
   }
+
+  .friend-chat-icon-container {
+    width: 40px;
+    margin-right: 0em;
+  }
+}
+
+/************************ Chat ***********************/
+
+.chat-page-container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+}
+
+.chat-list-container {
+  height: 100vh;
+  width: 220px;
+  background-color: #2e3136;
+  overflow-y: auto;
+}
+
+.chat-list-container-top {
+  background-color: #2e3136;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  height: 5%;
+  z-index: 99;
+}
+
+.chat-list-container-top-text {
+  font-size: 22px;
+  font-weight: bold;
+  color: white;
+  width: 210px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chat-list-container-middle {
+  position: relative;
+  top: 20;
+  bottom: 20;
+  height: 77%;
+  overflow-y: scroll;
+  margin-top: 40px;
+}
+
+.chat-list-container-bottom {
+  position: absolute;
+  bottom: 0;
+  width: 210px;
+  height: 18%;
+  background-color: #2e3136;
+  color: white;
+  text-align: center;
+}
+
+.clicked-chat-list-row {
+  display: flex;
+  width: 100%;
+  padding-bottom: 0.75em;
+  padding-top: 0.75em;
+  padding-left: 1em;
+  cursor: pointer;
+  background-color: #444959;
+  color: white;
+}
+
+.chat-list-row {
+  display: flex;
+  width: 100%;
+  padding-bottom: 0.75em;
+  padding-top: 0.75em;
+  padding-left: 1em;
+  cursor: pointer;
+  color: white;
+}
+
+.chat-profile-image {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
+
+.chat-profile-name {
+  font-size: 19px;
+  margin-left: 0.8em;
 }

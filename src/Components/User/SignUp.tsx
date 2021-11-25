@@ -144,28 +144,48 @@ class SignUp extends React.Component<any, {
                     <div className="containerTitle">
                         <div>Create an account</div>
                     </div>
-                    <div>
+                    <div className="mb-2">
                         <label className='mb-2 signUpLabel'>User ID</label>
                         <div>
                             <TextField
                                 id="user_id_input"
-                                variant="outlined"
+                                variant="standard"
                                 onChange={(e) => {this.handleOnChange(e, 'user_id')}}
                                 required
                                 className="col-12"
+                                inputProps={{ 
+                                    style: { 
+                                        fontFamily: 'Arial', 
+                                        color: 'white', 
+                                        border: 'none',
+                                        height: '50px',
+                                        margin: 'none',
+                                        backgroundColor: '#202225'
+                                    }
+                                }}
                             />
                         </div>
                     </div>
                     <div className="row d-flex flex-wrap">
-                        <div className="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                        <div className="mb-2 col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                             <label className='mb-2 signUpLabel'>First Name</label>
                             <div>
                                 <TextField
                                     id="first_name_input"
-                                    variant="outlined"
+                                    variant="standard"
                                     onChange={(e) => {this.handleOnChange(e, 'first_name')}}
                                     required
                                     style={{width: '100%'}}
+                                    inputProps={{ 
+                                        style: { 
+                                            fontFamily: 'Arial', 
+                                            color: 'white', 
+                                            border: 'none',
+                                            height: '50px',
+                                            margin: 'none',
+                                            backgroundColor: '#202225'
+                                        }
+                                    }}
                                 />
                             </div>
                         </div>
@@ -174,36 +194,66 @@ class SignUp extends React.Component<any, {
                             <div>
                                 <TextField
                                     id="last_name_input"
-                                    variant="outlined"
+                                    variant="standard"
                                     onChange={(e) => {this.handleOnChange(e, 'last_name')}}
                                     required
                                     style={{width: '100%'}}
+                                    inputProps={{ 
+                                        style: { 
+                                            fontFamily: 'Arial', 
+                                            color: 'white', 
+                                            border: 'none',
+                                            height: '50px',
+                                            margin: 'none',
+                                            backgroundColor: '#202225',
+                                        }
+                                    }}
                                 />
                             </div>
                         </div>
                     </div>
-                    <div>
+                    <div className="mb-2">
                         <label className='mb-2 signUpLabel'>Email</label>
                         <div>
                             <TextField
                                 id="email_input"
-                                variant="outlined"
+                                variant="standard"
                                 onChange={(e) => {this.handleOnChange(e, 'email')}}
                                 required
                                 className="col-12"
+                                inputProps={{ 
+                                    style: { 
+                                        fontFamily: 'Arial', 
+                                        color: 'white', 
+                                        border: 'none',
+                                        height: '50px',
+                                        margin: 'none',
+                                        backgroundColor: '#202225',
+                                    }
+                                }}
                             />
                         </div>
                     </div>
-                    <div>
+                    <div className="mb-2">
                         <label className='mb-2 signUpLabel'>Password</label>
                         <div>
                             <TextField
                                 id="password_input"
-                                variant="outlined"
+                                variant="standard"
                                 onChange={(e) => {this.handleOnChange(e, 'password')}}
                                 required
                                 className="col-12"
                                 type="password"
+                                inputProps={{ 
+                                    style: { 
+                                        fontFamily: 'Arial', 
+                                        color: 'white', 
+                                        border: 'none',
+                                        height: '50px',
+                                        margin: 'none',
+                                        backgroundColor: '#202225',
+                                    }
+                                }}
                             />
                         </div>
                     </div>
@@ -212,16 +262,33 @@ class SignUp extends React.Component<any, {
                         <div>
                             <TextField
                                 id="password_confirm_input"
-                                variant="outlined"
+                                variant="standard"
                                 onChange={(e) => {this.handleOnChange(e, 'password_confirm')}}
                                 required
                                 className="col-12"
                                 type="password"
+                                inputProps={{ 
+                                    style: { 
+                                        fontFamily: 'Arial', 
+                                        color: 'white', 
+                                        border: 'none',
+                                        height: '50px',
+                                        margin: 'none',
+                                        backgroundColor: '#202225',
+                                    }
+                                }}
                             />
                         </div>
                     </div>
                     <div className="mt-3">
-                        <Button className="signUpButton" style={{fontSize: '16px', fontWeight: 'bold' }} variant="outlined" onClick={this.signUpNewUser}>Sign Up</Button>
+                        <Button 
+                            className="signUpButton" 
+                            variant="outlined" 
+                            onClick={this.signUpNewUser}
+                            style={{fontSize: '16px', fontWeight: 'bold', color: 'white', backgroundColor: '#202225', border: 'none' }}
+                        >
+                            Sign Up
+                        </Button>
                     </div>
                     <h5 className="signUpHorizontalLine"><span>Or</span></h5>
                     <div style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
