@@ -4,10 +4,7 @@ const app = express();
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const cors = require('cors');
-const http = require('http');
-const socketIo = require("socket.io");
-const server = http.createServer(app);
-const io = socketIo(server);
+const socket = require('socket.io');
 
 app.use(cors());
 app.use(express.json({limit: '50mb'}))
@@ -316,6 +313,12 @@ app.get('/api/getAllChats/:userID', async (req, res) => {
     }
 })
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
     console.log(`Server running on ${port}`)
 })
+
+const io = socket(server);
+
+io.on("connection", function (socket) {
+    console.log("Made socket connection");
+});

@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 
 class Home extends React.Component<any, {
+    windowWidth: any,
     server: any,
     userID: any,
     userInfo: Array<any>,
@@ -10,7 +11,9 @@ class Home extends React.Component<any, {
 }>{
     constructor(props: any) {
         super(props);
+        let windowWidth = document.body.clientWidth;
         this.state = {
+            windowWidth: windowWidth,
             server: 'http://localhost:5032',
             userID: localStorage.getItem('user_id'),
             userInfo: [],
@@ -25,6 +28,18 @@ class Home extends React.Component<any, {
         }
         this.getMyInfo();
         this.getAllChats();
+        window.addEventListener("resize", this.detectWindowSizeChange);
+    }
+
+    detectWindowSizeChange = () => {
+        this.setState({
+            windowWidth: document.body.clientWidth
+        })
+    }
+
+    componentWillUnmount = () => {
+
+        window.removeEventListener("resize", this.detectWindowSizeChange);
     }
 
     getMyInfo = () => {
@@ -91,10 +106,10 @@ class Home extends React.Component<any, {
     }
     
     render() {
-        let { myChatsArray, clickedChat, userInfo } = this.state;
+        let { myChatsArray, clickedChat, userInfo, windowWidth, userID } = this.state;
         return (
             <div className="chat-page-container">
-                <div className="chat-list-container">
+                <div className={windowWidth > 414 ? "chat-list-container" : "chat-list-container-mobile"}>
                     <div className="chat-list-container-top">
                         <div className="chat-list-container-top-text">
                             Chats
@@ -105,7 +120,6 @@ class Home extends React.Component<any, {
                             return (
                                 <div 
                                     key={Math.random()} 
-                                    // className="chat-list-row" 
                                     className={clickedChat === chat ? "clicked-chat-list-row" : "chat-list-row"}
                                     onClick={() => {this.onClickChatHandle(chat)}}
                                 >
@@ -130,26 +144,34 @@ class Home extends React.Component<any, {
                         })}
                     </div>
                     <div className="chat-list-container-bottom">
-                        {/* <div>
-                            {this.state.userInfo[0]['user_image'] !== "" ? (
-                                <img 
-                                    alt="myProfileImage"
-                                    src={userInfo[0].user_image}
-                                />
-                            ):(
-                                <img
-                                    alt="userProfileImage" 
-                                    className="chat-profile-image" 
-                                    src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-                                    style={{backgroundColor: 'white'}}
-                                />
-                            )}
-                        </div> */}
+                        {userInfo.length > 0 ? (
+                            <div style={{width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+                                <div>
+                                    {userInfo[0].user_image !== "" ? (
+                                        <img 
+                                            alt="myProfileImage"
+                                            className="chat-my-profile-image"
+                                            src={userInfo[0].user_image}
+                                        />
+                                    ):(
+                                        <img
+                                            alt="myProfileImage" 
+                                            className="chat-profile-image" 
+                                            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                                            style={{backgroundColor: 'white'}}
+                                        />
+                                    )}
+                                </div>
+                                <div className="chat-my-profile-id">
+                                    {userID[0].toUpperCase() + userID.slice(1)}
+                                </div>
+                            </div>
+                        ):(
+                            <div></div>
+                        )}
                     </div>
                 </div>
-                <div>
-                    dfsfs
-                </div>
+                
             </div>
         )
     }

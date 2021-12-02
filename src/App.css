@@ -414,6 +414,7 @@ and (orientation: landscape) {
   position: fixed;
   top: 0;
   height: 5%;
+  width: 220px;
   z-index: 99;
 }
 
@@ -421,7 +422,7 @@ and (orientation: landscape) {
   font-size: 22px;
   font-weight: bold;
   color: white;
-  width: 210px;
+  width: 220px;
   height: 40px;
   display: flex;
   justify-content: center;
@@ -432,19 +433,9 @@ and (orientation: landscape) {
   position: relative;
   top: 20;
   bottom: 20;
-  height: 77%;
+  height: 85%;
   overflow-y: scroll;
   margin-top: 40px;
-}
-
-.chat-list-container-bottom {
-  position: absolute;
-  bottom: 0;
-  width: 210px;
-  height: 18%;
-  background-color: #2e3136;
-  color: white;
-  text-align: center;
 }
 
 .clicked-chat-list-row {
@@ -477,4 +468,143 @@ and (orientation: landscape) {
 .chat-profile-name {
   font-size: 19px;
   margin-left: 0.8em;
+}
+
+.chat-list-container-bottom {
+  position: absolute;
+  bottom: 0;
+  width: 220px;
+  height: 10%;
+  background-color: #2a2b2f;
+  color: white;
+  text-align: center;
+}
+
+.chat-my-profile-image {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+}
+
+.chat-my-profile-id {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+@media only screen
+and (max-device-width: 823px)
+and (orientation: landscape) {
+  .chat-list-container-top {
+    background-color: #2e3136;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    height: 10%;
+    width: 220px;
+    z-index: 99;
+  }
+
+  .chat-list-container-middle {
+    position: relative;
+    top: 20;
+    bottom: 20;
+    height: 67%;
+    overflow-y: scroll;
+    margin-top: 40px;
+  }
+
+  .chat-list-container-bottom {
+    height: 23%;
+    background-color: #2e3136;
+    text-align: center;
+  }
+
+  .chat-my-profile-image {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+  }
+
+  .chat-my-profile-id {
+    font-size: 15px;
+    font-weight: bold;
+    margin-top: 5px;
+  }
+}
+
+@media (max-width: 414px) {
+  .chat-list-container-mobile {
+    height: 100vh;
+    width: 100%;
+    background-color: #2e3136;
+    overflow-y: auto;
+  }
+
+  .chat-list-container-top {
+    width: 86%;
+    height: 8%;
+  }
+
+  .chat-list-container-top-text {
+    font-size: 22px;
+    font-weight: bold;
+    color: white;
+    width: 100%;
+    height: 100%;
+  }
+
+  .chat-list-container-middle {
+    position: relative;
+    top: 20;
+    bottom: 20;
+    height: 70%;
+    width: 100%;
+    overflow-y: scroll;
+    margin-top: 60px;
+  }
+
+  .chat-list-row {
+    display: flex;
+    width: 100%;
+  }
+
+  .chat-profile-image {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+  }
+  
+  .chat-profile-name {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 22px;
+  }
+
+  .chat-list-container-bottom {
+    width: 85%;
+    height: 20%;
+    background-color: #2e3136;
+    color: white;
+    text-align: center;
+  }
+}
+
+@media (max-width: 320px) {
+  .chat-list-container-middle {
+    position: relative;
+    top: 20;
+    bottom: 20;
+    height: 75%;
+    overflow-y: scroll;
+    margin-top: 40px;
+  }
+
+  .chat-list-container-bottom {
+    width: 81%;
+    height: 20%;
+    background-color: #2e3136;
+    text-align: center;
+  }
 }
