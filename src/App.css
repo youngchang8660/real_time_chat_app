@@ -413,7 +413,7 @@ and (orientation: landscape) {
   overflow: hidden;
   position: fixed;
   top: 0;
-  height: 5%;
+  height: 50px;
   width: 220px;
   z-index: 99;
 }
@@ -423,7 +423,7 @@ and (orientation: landscape) {
   font-weight: bold;
   color: white;
   width: 220px;
-  height: 40px;
+  height: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -435,7 +435,7 @@ and (orientation: landscape) {
   bottom: 20;
   height: 85%;
   overflow-y: scroll;
-  margin-top: 40px;
+  margin-top: 50px;
 }
 
 .clicked-chat-list-row {
@@ -500,7 +500,7 @@ and (orientation: landscape) {
     overflow: hidden;
     position: fixed;
     top: 0;
-    height: 10%;
+    height: 50px;
     width: 220px;
     z-index: 99;
   }
@@ -511,7 +511,7 @@ and (orientation: landscape) {
     bottom: 20;
     height: 67%;
     overflow-y: scroll;
-    margin-top: 40px;
+    margin-top: 50px;
   }
 
   .chat-list-container-bottom {
@@ -606,5 +606,194 @@ and (orientation: landscape) {
     height: 20%;
     background-color: #2e3136;
     text-align: center;
+  }
+}
+
+/******************* Chat Message *******************/
+
+.chat-message-container {
+  position: absolute;
+  left: 350px;
+  width: 70%;
+  height: 100%;
+}
+
+.chat-message-container-header {
+  width: 70%;
+  height: 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #303136;
+  position: fixed;
+  top: 0;
+  z-index: 9999;
+}
+
+.message-container-header-title {
+  font-size: 20px;
+  font-weight: 900;
+  margin-left: 2rem;
+}
+
+.chat-message-text-container {
+  position: relative;
+  top: 3rem;
+}
+
+.chat-message-more-icon-container {
+  margin-right: 2rem;
+  cursor: pointer;
+}
+
+.my-dropdown-toggle:after {
+  display: none !important;
+}
+
+.delete-message:hover {
+  text-decoration: none;
+}
+
+.sent-message-row {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.message-more-container {
+  width: 50px;
+  height: auto;
+  margin-right: 2rem;
+}
+
+.message-edit:hover {
+  color: white !important;
+  background-color: #5965f2 !important;
+}
+
+.message-delete:hover {
+  color: white !important;
+  background-color: tomato !important;
+}
+
+.messageTime {
+  margin: 0px 5px;
+  font-weight: 800;
+}
+
+.sentMessage {
+  max-width: 80%;
+  height: auto;
+  min-height: 40px;
+  background-color: #48a1de;
+  border-radius: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 2rem;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.editSentMessage {
+  width: 100%;
+  height: auto;
+  min-height: 30px;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.edit-chat-message-input {
+  width: 100%;
+  min-height: 50px;
+  background-color: #40444c;
+  border: none;
+  font-size: 18px;
+  font-weight: bold;
+  padding-left: 10px;
+  padding-top: 10px;
+}
+
+.message-profile-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin: 0 1rem;
+  background-color: white;
+}
+
+.empty-message-profile-image {
+  width: 40px;
+  height: 40px;
+  margin: 0 1rem;
+}
+
+.message-delete-check-box {
+  width: 25px;
+  height: 25px;
+  min-width: 25px;
+  min-height: 25px;
+  border-radius: 50%;
+  background-color: white;
+}
+
+.received-message-row {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.receivedMessage {
+  width: auto;
+  height: auto;
+  min-height: 40px;
+  background-color: #ff69b4;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  align-items: center;
+  padding: 0 2rem;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.chat-message-input-container {
+  /* border: 1px solid white; */
+  width: 70%;
+  height: auto;
+  position: fixed;
+  bottom: 0;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.chat-message-input {
+  width: 90%;
+  min-height: 50px;
+  background-color: #40444c;
+  border: none;
+  font-size: 18px;
+  font-weight: bold;
+  padding-left: 10px;
+  padding-top: 10px;
+}
+
+@media (max-width: 768px) {
+  .chat-message-container {
+    position: absolute;
+    left: 300px;
+    width: 60%;
+    height: 100%;
+    border: 1px solid white;
   }
 }

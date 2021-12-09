@@ -4,7 +4,7 @@ const app = express();
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const cors = require('cors');
-const socket = require('socket.io');
+const { send } = require('process');
 
 app.use(cors());
 app.use(express.json({limit: '50mb'}))
@@ -30,25 +30,6 @@ connection.connect((err) => {
     if(err) throw err;
     console.log('db connected')
 })
-
-/*************** socket io *******************/
-
-// let interval;
-// io.on("connection", (socket) => {
-//   console.log("New client connected");
-//   if (interval) {
-//     clearInterval(interval);
-//   }
-// //   interval = setInterval(() => getApiAndEmit(socket), 1000);
-//   socket.on("disconnect", () => {
-//     console.log("Client disconnected");
-//     clearInterval(interval);
-//   });
-// });
-
-// const getAllChats = socket => {
-    
-// }
 
 // Register new users
 app.post('/api/signUpNewUser', async (req, res) => {
@@ -275,17 +256,36 @@ app.get('/api/getMyFriends/:userID', async(req, res) => {
 
 /********************* Chats *************************/
 
-// create new chat
-app.post('/api/createNewChat/:userOne/:userTwo', async (req, res) => {
+// check if chat already exists
+app.get('/api/checkChatExistence/:userOne/:userTwo', async (req, res) => {
     let { userOne, userTwo } = req.params;
     try {
-        let query = "CALL Create_Chat_Room (?, ?)";
+        let query = "CALL Check_If_ChatRoom_Exists (?, ?)";
         connection.query(query, [userOne, userTwo], (err, result) => {
             if(err) {
-                console.log(err.message)
-                return res.status(500).send('Failed to create new chat')
+                console.log(err.message);
+                return res.status(500).send('Failed to check if chat already exists');
             } else {
-                return res.status(200).send(result[0])
+                return res.status(200).send(result[0]);
+            }
+        })
+    }catch(err) {
+        console.log(err.message, 'Failed to check if chat already exists')
+        return res.status(500).json(err.message);
+    }
+})
+
+// create new chat
+app.post('/api/createNewChat', async (req, res) => {
+    let { userOne, userTwo, messageText } = req.body;
+    try {
+        let query = "CALL Create_New_Chat (?, ?, ?)";
+        connection.query(query, [userOne, userTwo, messageText], (err, result) => {
+            if(err) {
+                console.log(err.message);
+                return res.status(500).send('Failed to create new chat');
+            } else {
+                return res.status(200).send(result[0]);
             }
         })
     }catch(err) {
@@ -313,12 +313,66 @@ app.get('/api/getAllChats/:userID', async (req, res) => {
     }
 })
 
-const server = app.listen(port, () => {
-    console.log(`Server running on ${port}`)
+/******************** Messages *************************/
+
+// Get all Messages in the chat room
+app.get('/api/getMessages/:chatID', async (req, res) => {
+    let { chatID } = req.params;
+    // console.log(chatID)
+    try {
+        let query = "CALL Get_All_Messages_By_Chat (?)";
+        connection.query(query, [chatID], (err, result) => {
+            if(err) {
+                console.log(err.message);
+                return res.status(500).send('Failed to fetch all messages from the chat room');
+            } else {
+                return res.status(200).send(result[0]);
+            }
+        })
+    }catch(err) {
+        console.log(err.message, 'Failed to fetch all messages from the chat room');
+        return res.status(500).json(err.message);
+    }
 })
 
-const io = socket(server);
+// edit message
+app.put('/api/editMessage', async (req, res) => {
+    let { chatID, messageID, sender, messageText } = req.body['data'];
+    try {
+        let query = "CALL Edit_Message (?, ?, ?, ?)";
+        connection.query(query, [chatID, messageID, sender, messageText], (err, result) => {
+            if(err) {
+                console.log(err.message);
+                return res.status(500).send('Failed to update message');
+            } else {
+                return res.status(200).send(result[0]);
+            }
+        })
+    }catch(err) {
+        console.log(err.message, 'Failed to update message');
+        return res.status(500).json(err.message);
+    }
+})
 
-io.on("connection", function (socket) {
-    console.log("Made socket connection");
-});
+// delete message
+app.delete('/api/deleteMessage', async (req, res) => {
+    let { chatID, messageID, sender } = req.body;
+    try {
+        let query = "CALL Delete_Message (?, ?, ?)";
+        connection.query(query, [chatID, messageID, sender], (err, result) => {
+            if(err) {
+                console.log(err.message);
+                return res.status(500).send('Failed to fetch delete message');
+            } else {
+                return res.status(200).send(result[0]);
+            }
+        })
+    }catch(err) {
+        console.log(err.message, 'Failed to fetch delete message');
+        return res.status(500).json(err.message);
+    }
+})
+
+app.listen(port, () => {
+    console.log(`Server running on ${port}`)
+})

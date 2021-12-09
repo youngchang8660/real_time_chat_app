@@ -11,13 +11,6 @@ import {connect} from 'react-redux';
 import { toggleLogoutDialog } from '../../redux/actions';
 import SignOutDialog from './SignOutDialog';
 
-const styles = {
-    width: 240,
-    display: 'inline-table',
-    marginRight: 10,
-    background: 'black'
-  };
-
 class InnerSideNav extends React.Component<any, {
     toggleExpanded: boolean,
     activeKey: any,

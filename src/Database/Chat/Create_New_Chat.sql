@@ -1,0 +1,28 @@
+-- DELIMITER //
+
+-- CREATE PROCEDURE Create_New_Chat(userOne VARCHAR(50), userTwo VARCHAR(50), messageText VARCHAR(200))
+-- BEGIN
+-- 	DECLARE rnd_str text;
+--     SET rnd_str := SUBSTR(CONCAT(MD5(RAND()),MD5(RAND())),1,36);
+--     INSERT INTO Chats (
+-- 		Chat_id,
+-- 		User_one,
+-- 		User_two
+-- 	)VALUES(
+-- 		rnd_str,
+-- 		userOne,
+-- 		userTwo
+-- 	);
+--     INSERT INTO Messages (
+-- 		Chat_id,
+--         Sender,
+--         Message_text
+--     )VALUES(
+-- 		rnd_str,
+--         userOne,
+--         messageText
+--     );
+--     SELECT * FROM Chats WHERE chat_id = rnd_str;
+-- END //
+
+-- DELIMITER ;

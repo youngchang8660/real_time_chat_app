@@ -2,15 +2,35 @@ import axios from "axios";
 import React from "react";
 import SearchIcon from '@mui/icons-material/Search';
 import TextsmsIcon from '@mui/icons-material/Textsms';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+import qs from 'qs';
+
+const style = {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '70%',
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
 
 class FriendsList extends React.Component<any, {
     server: any,
     currentTab: any,
     friendUserID: any,
     userID: any,
+    recipient: any,
     friendsData: Array<any>,
     pendingRequestsData: Array<any>,
     searchedUsersData: Array<any>,
+    isStartConversationModalOpen: boolean,
+    messageText: any,
 }>{
     constructor(props: any) {
         super(props);
@@ -19,9 +39,12 @@ class FriendsList extends React.Component<any, {
             currentTab: 'All',
             friendUserID: '',
             userID: localStorage.getItem('user_id'),
+            recipient: "",
             friendsData: [],
             pendingRequestsData: [],
             searchedUsersData: [],
+            isStartConversationModalOpen: false,
+            messageText: ""
         }
     }
 
@@ -67,21 +90,6 @@ class FriendsList extends React.Component<any, {
         })
     }
 
-    onClickStartConversation = (data: any) => {
-        let { server, userID } = this.state;
-        let userOne = userID;
-        let userTwo = data.user_id;
-        axios.post(`${server}/api/createNewChat/${userOne}/${userTwo}`)
-            .then((res: any) => {
-                if(res.data.length > 0) {
-                    let chat_id = res.data[0].chat_id;
-                    this.props.history.push(`/chatApp/chat/${chat_id}`);
-                }
-            }).catch(err => {
-                console.log(err.message);
-            })
-    }
-
     /*********************** All Friends Tab *******************/
 
     getAllMyFriends = () => {
@@ -100,6 +108,26 @@ class FriendsList extends React.Component<any, {
                 this.setState({
                     friendsData
                 })
+            }).catch(err => {
+                console.log(err.message)
+            })
+    }
+
+    onClickChatIcon = (data: any) => {
+        let { server, userID } = this.state;
+        let userOne = userID;
+        let userTwo = data.user_id;
+        axios.get(`${server}/api/checkChatExistence/${userOne}/${userTwo}`)
+            .then((res: any) => {
+                if(res.data.length > 0) {
+                    let chatID = res.data[0]['chat_id'];
+                    this.props.history.push(`/chatApp/chat/${chatID}`);
+                } else {
+                    this.setState({
+                        isStartConversationModalOpen: true,
+                        recipient: data.user_id
+                    })
+                }
             }).catch(err => {
                 console.log(err.message)
             })
@@ -201,8 +229,44 @@ class FriendsList extends React.Component<any, {
             })
     }
 
+    closeStartConversationModal = () => {
+        this.setState({
+            isStartConversationModalOpen: false
+        })
+    }
+
+    onChangeMessageText = (e: any) => {
+        this.setState({
+            messageText: e.currentTarget.value
+        })
+    }
+
+    createNewChatRoom = () => {
+        let { server, userID, recipient, messageText } = this.state;
+        let url = (`${server}/api/createNewChat`);
+        let data = {
+            'userOne': userID,
+            'userTwo': recipient,
+            'messageText': messageText
+        };
+        const options: any = {
+            method: 'POST',
+            headers: { 'content-type': 'application/x-www-form-urlencoded' },
+            data: qs.stringify(data),
+            url,
+        }
+        axios(options)
+            .then((res: any) => {
+                console.log(res.data)
+                let chatID = res.data[0]['chat_id'];
+                this.props.history.push(`/chatApp/chat/${chatID}`);
+            }).catch(err => {
+                console.log(err.message)
+            })
+    }
+
     render() {
-        let { currentTab, friendsData, pendingRequestsData, searchedUsersData } = this.state;
+        let { currentTab, friendsData, pendingRequestsData, searchedUsersData, isStartConversationModalOpen } = this.state;
         return (
             <div className="container" style={{overflow: 'hidden', height: 'auto'}}>
                 <div className="friendsTopNav">
@@ -259,7 +323,8 @@ class FriendsList extends React.Component<any, {
                                     <div style={{display: 'flex'}}>
                                         <div 
                                             className="friend-chat-icon-container"
-                                            onClick={() => {this.onClickStartConversation(user)}}
+                                            // onClick={() => {this.onClickStartConversation(user)}}
+                                            onClick={() => this.onClickChatIcon(user)}
                                         >
                                             <TextsmsIcon />
                                         </div>
@@ -351,6 +416,27 @@ class FriendsList extends React.Component<any, {
                 ):(
                     <div></div>
                 )}
+                <Modal
+                    open={isStartConversationModalOpen}
+                    onClose={this.closeStartConversationModal}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                    <Box sx={style}>
+                        <Typography id="modal-modal-title" variant="h6" component="h2" style={{color: 'black'}}>
+                            Start your new conservation
+                        </Typography>
+                        <input 
+                            style={{width: '100%'}} 
+                            onChange={(e) => {this.onChangeMessageText(e)}} 
+                        />
+                        <Button
+                            onClick={this.createNewChatRoom}
+                        >
+                            Send
+                        </Button>
+                    </Box>                                                      
+                </Modal>
             </div>
         )
     }
