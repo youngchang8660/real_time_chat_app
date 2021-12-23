@@ -1,8 +1,9 @@
-import { TOGGLE_LOGOUTTOGGLE , SELECT_CHAT_ROOM} from '../constants/action-types.js';
+import { TOGGLE_LOGOUTTOGGLE , SELECT_CHAT_ROOM, TOGGLE_MOBILE_AND_CHAT_SELECTED } from '../constants/action-types.js';
 
 const initialState = {
     logoutDialogOpen: false,
     selectedChatRoom: {},
+    isMobileAndChatClicked: false,
 };
 
 function rootReducer(state = initialState, action) {
@@ -16,6 +17,11 @@ function rootReducer(state = initialState, action) {
             return {
                 ...state,
                 selectedChatRoom: action.payload
+            }
+        case TOGGLE_MOBILE_AND_CHAT_SELECTED:
+            return {
+                ...state,
+                isMobileAndChatClicked: !state.isMobileAndChatClicked
             }
         default:
             break;

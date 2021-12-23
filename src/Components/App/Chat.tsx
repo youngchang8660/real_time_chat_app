@@ -3,9 +3,7 @@ import axios from 'axios';
 import ChatRoomList from './ChatRoomList';
 import ChatRoom from './ChatRoom';
 import { connect } from 'react-redux';
-import { selectChatRoom } from '../../redux/actions';
-
-let isMobileAndChatClicked = false;
+import { selectChatRoom, toggleMobileAndChatSelected } from '../../redux/actions';
 
 class Chat extends React.Component<any, {
     windowWidth: any,
@@ -45,10 +43,12 @@ class Chat extends React.Component<any, {
     componentDidUpdate = (nextProps: any) => {
         if(nextProps.selectedChatRoom.chat_id !== this.props.selectedChatRoom.chat_id) {
             if(Object.keys(this.props.selectedChatRoom).length !== 0 && this.state.windowWidth <= 414) {
-                isMobileAndChatClicked = true
+                // isMobileAndChatClicked = true
+                this.props.toggleMobileAndChatSelected(true)
             }
             if(Object.keys(this.props.selectedChatRoom).length === 0 && this.state.windowWidth <= 414) {
-                isMobileAndChatClicked = false
+                // isMobileAndChatClicked = false
+                this.props.toggleMobileAndChatSelected(false)
             }
             this.setState({
                 isLoading: false,
@@ -115,7 +115,7 @@ class Chat extends React.Component<any, {
     
     render() {
         let { windowWidth, userInfo, myChatsArray, userID, isLoading } = this.state;
-        let { selectedChatRoom } = this.props;
+        let { selectedChatRoom, isMobileAndChatClicked } = this.props;
         return (
             <div className={windowWidth > 414 ? "chat-page-container" : "mobile-chat-page-container"}>
                 {!isMobileAndChatClicked ?
@@ -150,13 +150,15 @@ class Chat extends React.Component<any, {
 
 function mapStateToProps(state: any) {
     return {
-        selectedChatRoom: state.selectedChatRoom
+        selectedChatRoom: state.selectedChatRoom,
+        isMobileAndChatClicked: state.isMobileAndChatClicked,
     }
 }
 
 function matchDispatchToProps(dispatch: any) {
     return {
-        selectChatRoom: (chat: any) => dispatch(selectChatRoom(chat))
+        selectChatRoom: (chat: any) => dispatch(selectChatRoom(chat)),
+        toggleMobileAndChatSelected: () => dispatch(toggleMobileAndChatSelected())
     }
 }
 

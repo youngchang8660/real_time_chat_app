@@ -8,7 +8,7 @@ import { withRouter } from 'react-router-dom';
 import ExitIcon from '@rsuite/icons/Exit';
 import NoticeIcon from '@rsuite/icons/Notice';
 import {connect} from 'react-redux';
-import { toggleLogoutDialog } from '../../redux/actions';
+import { toggleLogoutDialog, selectChatRoom, toggleMobileAndChatSelected } from '../../redux/actions';
 import SignOutDialog from './SignOutDialog';
 
 class InnerSideNav extends React.Component<any, {
@@ -30,18 +30,25 @@ class InnerSideNav extends React.Component<any, {
     onChangeSelect = (eventKey: any) => {
         switch(eventKey) {
             case "1":
-                this.props.history.push('/chatApp/chat');
+                if(Object.keys(this.props.selectedChatRoom).length === 0) {
+                    this.props.history.push('/chatApp/chat');
+                    this.props.toggleMobileAndChatSelected(false);
+                }
                 break;
             case "2":
+                this.props.selectChatRoom({});
                 this.props.history.push('/chatApp/friends');
                 break;
             case "3":
+                this.props.selectChatRoom({});
                 this.props.history.push('/chatApp/notifications');
                 break;
             case "4":
+                this.props.selectChatRoom({});
                 this.props.history.push('/chatApp/profile');
                 break;
             case "5":
+                this.props.selectChatRoom({});
                 this.props.toggleLogoutDialog(true)
                 break;   
             default:
@@ -96,13 +103,17 @@ class InnerSideNav extends React.Component<any, {
 
 function mapStateToProps(state: any) {
     return {
-        logoutDialogOpen: state.logoutDialogOpen
+        logoutDialogOpen: state.logoutDialogOpen,
+        selectedChatRoom: state.selectedChatRoom,
+        isMobileAndChatClicked: state.isMobileAndChatClicked,
     }
 }
 
 function matchDispatchToProps(dispatch: any) {
     return {
-        toggleLogoutDialog: () => dispatch(toggleLogoutDialog())
+        toggleLogoutDialog: () => dispatch(toggleLogoutDialog()),
+        selectChatRoom: (chat: any) => dispatch(selectChatRoom(chat)),
+        toggleMobileAndChatSelected: () => dispatch(toggleMobileAndChatSelected())
     }
 }
 
