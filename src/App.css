@@ -718,6 +718,8 @@ and (orientation: landscape) {
 }
 
 .message-container-header-title {
+  position: absolute;
+  left: 0;
   font-size: 20px;
   font-weight: 900;
   margin-left: 2rem;
