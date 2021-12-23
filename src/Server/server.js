@@ -134,7 +134,7 @@ app.put('/api/updateUser', async (req, res) => {
             }
         })
     }catch(err) {
-        console.log(err.message, 'failed to update user info')
+        console.log(err.message, 'failed to update user info');
         return res.status(500).json(err.message);
     }
 })
@@ -331,6 +331,25 @@ app.get('/api/getMessages/:chatID', async (req, res) => {
         })
     }catch(err) {
         console.log(err.message, 'Failed to fetch all messages from the chat room');
+        return res.status(500).json(err.message);
+    }
+})
+
+// send message
+app.post('/api/sendMessage', async (req, res) => {
+    let { chatID, sender, messageText } = req.body['data'];
+    try {
+        let query = "CALL Send_Message (?, ?, ?)";
+        connection.query(query, [chatID, sender, messageText], (err, result) => {
+            if(err) {
+                console.log(err.message);
+                return res.status(500).send('Failed to send message');
+            } else {
+                return res.status(200).send(result[0]);
+            }
+        })
+    }catch(err) {
+        console.log(err.message, 'Failed to send message');
         return res.status(500).json(err.message);
     }
 })

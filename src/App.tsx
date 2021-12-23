@@ -45,7 +45,7 @@ class App extends React.Component<any, {
                 </CustomProvider>
                 <Route exact path="/chatApp/chat/:chat_id?" component={Chat} />
                 <Route exact path="/chatApp/profile" component={Profile} />
-                <Route exact path="/chatApp/friends" component={FriendsList} />
+                <Route exact path="/chatApp/friends" component={FriendsList} />      
               </div>
             </React.Fragment>
           </Switch>

@@ -395,10 +395,22 @@ and (orientation: landscape) {
 
 /************************ Chat ***********************/
 
+.mobile-chat-page-container {
+  width: 100%;
+  height: 100vh;
+}
+
 .chat-page-container {
   width: 100%;
   height: 100vh;
   display: flex;
+}
+
+.chat-list-container-mobile {
+  height: 100vh;
+  width: 100%;
+  overflow-y: auto;
+  position: relative;
 }
 
 .chat-list-container {
@@ -406,6 +418,16 @@ and (orientation: landscape) {
   width: 220px;
   background-color: #2e3136;
   overflow-y: auto;
+}
+
+.mobile-chat-list-container-top {
+  background-color: #2e3136;
+  width: 100%;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  height: 50px;
+  z-index: 99;
 }
 
 .chat-list-container-top {
@@ -418,6 +440,18 @@ and (orientation: landscape) {
   z-index: 99;
 }
 
+.mobile-chat-list-container-top-text {
+  font-size: 22px;
+  font-weight: bold;
+  color: white;
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-right: 56px;
+}
+
 .chat-list-container-top-text {
   font-size: 22px;
   font-weight: bold;
@@ -427,6 +461,16 @@ and (orientation: landscape) {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.mobile-chat-list-container-middle {
+  position: relative;
+  top: 20;
+  width: 100%;
+  height: 80%;
+  overflow-y: scroll;
+  overflow-x: visible;
+  margin-top: 50px;
 }
 
 .chat-list-container-middle {
@@ -468,6 +512,16 @@ and (orientation: landscape) {
 .chat-profile-name {
   font-size: 19px;
   margin-left: 0.8em;
+}
+
+.mobile-chat-list-container-bottom {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 100px;
+  background-color: #2a2b2f;
+  color: white;
+  text-align: center;
 }
 
 .chat-list-container-bottom {
@@ -609,13 +663,40 @@ and (orientation: landscape) {
   }
 }
 
-/******************* Chat Message *******************/
+/******************* Chat Room *******************/
+
+.mobile-chat-room-container {
+  position: fixed;
+  top: 0;
+  left: 56px;
+  width: 100%;
+  height: 100vh;
+  background-color: black;
+  z-index: 9999;
+}
 
 .chat-message-container {
   position: absolute;
   left: 350px;
   width: 70%;
   height: 100%;
+  overflow-y: hidden;
+}
+
+.mobile-chat-message-container-header {
+  width: 100%;
+  height: 4rem;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #303136;
+  background-color: #303136;
+  position: relative;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-right: 76px;
 }
 
 .chat-message-container-header {
@@ -624,11 +705,16 @@ and (orientation: landscape) {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
   border-bottom: 2px solid #303136;
+  background-color: #303136;
   position: fixed;
   top: 0;
-  z-index: 9999;
+  z-index: 100;
+}
+
+.mobile-message-container-header-title {
+  font-size: 26px;
+  font-weight: 900;
 }
 
 .message-container-header-title {
@@ -638,8 +724,12 @@ and (orientation: landscape) {
 }
 
 .chat-message-text-container {
-  position: relative;
+  position: absolute;
   top: 3rem;
+  bottom: 80px;
+  width: 100%;
+  height: auto;
+  overflow-y: scroll;
 }
 
 .chat-message-more-icon-container {
@@ -655,8 +745,20 @@ and (orientation: landscape) {
   text-decoration: none;
 }
 
+.dateRow {
+  width: 100%;
+  background-color: #444959;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  font-weight: bold;
+  margin: 1rem 0;
+}
+
 .sent-message-row {
   width: 100%;
+  height: auto;
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -666,7 +768,6 @@ and (orientation: landscape) {
 .message-more-container {
   width: 50px;
   height: auto;
-  margin-right: 2rem;
 }
 
 .message-edit:hover {
@@ -685,17 +786,18 @@ and (orientation: landscape) {
 }
 
 .sentMessage {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   max-width: 80%;
   height: auto;
   min-height: 40px;
   background-color: #48a1de;
-  border-radius: 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0 2rem;
+  border-radius: 5px;
+  padding: 0.5em 1em;
   font-size: 18px;
   font-weight: bold;
+  word-wrap: break-word;
 }
 
 .editSentMessage {
@@ -719,6 +821,11 @@ and (orientation: landscape) {
   font-weight: bold;
   padding-left: 10px;
   padding-top: 10px;
+}
+
+.mobile-message-profile-image {
+  width: 10px;
+  height: 0;
 }
 
 .message-profile-image {
@@ -753,47 +860,259 @@ and (orientation: landscape) {
 }
 
 .receivedMessage {
-  width: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 80%;
   height: auto;
   min-height: 40px;
   background-color: #ff69b4;
-  border-radius: 15px;
-  display: flex;
-  align-items: center;
-  align-items: center;
-  padding: 0 2rem;
+  border-radius: 5px;
+  padding: 0.5em 1em;
   font-size: 18px;
   font-weight: bold;
+  word-wrap: break-word;
+}
+
+.mobile-chat-message-input-container {
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  padding-right: 56px;
 }
 
 .chat-message-input-container {
-  /* border: 1px solid white; */
   width: 70%;
-  height: auto;
   position: fixed;
   bottom: 0;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   display: flex;
   justify-content: center;
 }
 
 .chat-message-input {
   width: 90%;
-  min-height: 50px;
+  max-height: 170px;
+  min-height: 62px;
+  overflow-y: scroll;
   background-color: #40444c;
   border: none;
   font-size: 18px;
   font-weight: bold;
-  padding-left: 10px;
-  padding-top: 10px;
 }
 
-@media (max-width: 768px) {
+@media only screen
+and (max-device-width: 1024px)
+and (orientation: portrait) {
   .chat-message-container {
     position: absolute;
     left: 300px;
-    width: 60%;
+    width: 70%;
     height: 100%;
-    border: 1px solid white;
+    overflow-y: hidden;
+  }
+
+  .message-container-header-title {
+    font-size: 28px;
+    font-weight: 900;
+    margin-left: 2rem;
+  }
+
+  .dateRow {
+    font-size: 24px;
+  }
+
+  .messageTime {
+    font-size: 22px;
+  }
+
+  .sentMessage {
+    font-size: 24px;
+    max-width: 70%;
+  }
+
+  .receivedMessage {
+    font-size: 24px;
+    max-width: 70%;
+  }
+
+  .empty-message-profile-image {
+    width: 40px;
+    height: 40px;
+    margin: 0 1rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .chat-list-container-bottom {
+    height: 12%;
+  }
+
+  .chat-my-profile-image {
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+  }
+  
+  .chat-my-profile-id {
+    font-size: 16px;
+  }
+
+  .chat-message-container {
+    position: absolute;
+    left: 290px;
+    width: 70%;
+    height: 100%;
+    overflow-y: hidden;
+  }
+
+  .sentMessage {
+    max-width: 70%;
+  }
+
+  .receivedMessage {
+    max-width: 70%;
+  }
+}
+
+@media (max-width: 768px) {
+  .chat-list-container {
+    height: 100vh;
+    width: 200px;
+    background-color: #2e3136;
+    overflow-y: auto;
+  }
+
+  .chat-list-container-top {
+    width: 200px;
+  }
+  
+  .chat-list-container-top-text {
+    width: 200px;
+  }
+
+  .chat-list-container-bottom {
+    width: 200px;
+    height: 10%;
+  }
+
+  .chat-message-container {
+    position: absolute;
+    left: 265px;
+    width: 65%;
+    height: 100%;
+  }
+
+  .chat-message-container-header {
+    width: 65%;
+    height: 4rem;
+  }
+
+  .dateRow {
+    font-size: 22px;
+  }
+
+  .messageTime {
+    font-size: 14px;
+  }
+
+  .sentMessage {
+    max-width: 60%;
+    font-size: 19px;
+  }
+
+  .receivedMessage {
+    max-width: 60%;
+    font-size: 19px;
+  }
+
+  .chat-message-input-container {
+    width: 65%;
+  }
+}
+
+@media(max-width: 414px) {
+  .dateRow {
+    width: 100%;
+    background-color: #444959;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    font-weight: bold;
+    margin: 1rem 0;
+    padding-right: 56px;
+  }
+
+  .sent-message-row {
+    padding-right: 56px;
+  }
+
+  .sentMessage {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 65%;
+    height: auto;
+    min-height: 20px;
+    background-color: #48a1de;
+    border-radius: 5px;
+    padding: 0.3em 0.5em;
+    font-size: 16px;
+    font-weight: bold;
+    word-wrap: break-word;
+  }
+  
+  .edit-chat-message-input {
+    width: 100%;
+    min-height: 30px;
+    font-size: 16px;
+    font-weight: bold;
+    padding-left: 5px;
+    padding-top: 5px;
+  }
+
+  .receivedMessage {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 65%;
+    height: auto;
+    min-height: 20px;
+    background-color: #ff69b4;
+    border-radius: 5px;
+    padding: 0.3em 0.5em;
+    font-size: 16px;
+    font-weight: bold;
+    word-wrap: break-word;
+  }
+
+  .messageTime {
+    font-size: 12px;
+  }
+
+  .chat-message-input {
+    width: 95%;
+    max-height: 150px;
+    min-height: 40px;
+    overflow-y: scroll;
+    background-color: #40444c;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .arrowBackIcon {
+    position: absolute;
+    left: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
   }
 }

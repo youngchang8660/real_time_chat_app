@@ -179,9 +179,9 @@ class FriendsList extends React.Component<any, {
     onClickFriendSearchByID = () => {
         let { server, userID, friendUserID } = this.state;
         let searchedUsersData: any = [];
-        axios.get(`${server}/api/getUserByID/${userID}/${friendUserID}`)
+        if(friendUserID.length > 0) {
+            axios.get(`${server}/api/getUserByID/${userID}/${friendUserID}`)
             .then(res => {
-                console.log(res.data)
                 searchedUsersData = res.data;
                 for(let i = 0; i < searchedUsersData.length; i++) {
                     if(searchedUsersData[i].user_image !== null) {
@@ -196,6 +196,11 @@ class FriendsList extends React.Component<any, {
             }).catch(err => {
                 console.log(err.message)
             })
+        } else {
+            this.setState({
+                searchedUsersData: []
+            })
+        }
     }
 
     onClickSendRequest = (data: any) => {
@@ -398,9 +403,6 @@ class FriendsList extends React.Component<any, {
                                         <h1 className="friend-user-id">{user.user_id}</h1>
                                     </div>
                                     <div style={{display: 'flex'}}>
-                                        <div className="friend-chat-icon-container">
-                                            <TextsmsIcon />
-                                        </div>
                                         <div className="friend-add-button-container">
                                             {user.status !== 0 ? (
                                                 <button className="friend-add-button" onClick={() => {this.onClickSendRequest(user)}}>Add</button>

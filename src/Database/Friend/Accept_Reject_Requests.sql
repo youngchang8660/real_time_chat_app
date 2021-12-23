@@ -22,8 +22,7 @@
 -- 				DELETE FROM Friend_Requests WHERE user_one = friendID and user_two = userID;
 --                 END IF;
 --         ELSE
--- 			UPDATE Friend_Requests
---             SET status = 2
+-- 			DELETE FROM Friend_requests
 --             WHERE request_id = requestID;
 -- 		END IF;
 --     END IF;
