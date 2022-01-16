@@ -1,10 +1,11 @@
 import React from 'react';
+import { RouteComponentProps } from "react-router-dom";
 import axios from 'axios';
 import qs from 'qs';
 import { TextField, Button } from '@material-ui/core';
 import MessageSnackbar from '../Reusable/MessageSnackbar';
 
-class SignUp extends React.Component<any, {
+interface SignUpStateInterface {
     user_id: string,
     first_name: string,
     last_name: string,
@@ -15,8 +16,13 @@ class SignUp extends React.Component<any, {
     isSnackbarOpen: boolean,
     status: number,
     isSuccessfullySignedUp: boolean,
-}>{
-    constructor(props: any) {
+}
+
+class SignUp extends React.Component<
+    RouteComponentProps,
+    SignUpStateInterface
+>{
+    constructor(props: RouteComponentProps) {
         super(props);
         this.state = {
             user_id: "",
@@ -74,7 +80,6 @@ class SignUp extends React.Component<any, {
     signUpNewUser = () => {
         let { user_id, first_name, last_name, email, password, password_confirm } = this.state;
         let isEmailValid = this.validateEmail(email);
-        console.log(isEmailValid)
         if(isEmailValid) {
             let url = ('http://localhost:5032/api/signUpNewUser');
             let data = {

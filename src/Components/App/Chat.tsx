@@ -1,20 +1,38 @@
 import React from 'react';
+import { RouteComponentProps } from "react-router-dom";
 import axios from 'axios';
 import ChatRoomList from './ChatRoomList';
 import ChatRoom from './ChatRoom';
 import { connect } from 'react-redux';
 import { selectChatRoom, toggleMobileAndChatSelected } from '../../redux/actions';
 
-class Chat extends React.Component<any, {
-    windowWidth: any,
-    server: any,
+interface StateProps {
+    selectedChatRoom: any,
+    isMobileAndChatClicked: boolean
+}
+
+interface DispatchProps {
+    selectChatRoom: (chat: any) => void,
+    toggleMobileAndChatSelected: (action: boolean) => void
+}
+
+interface ChatInterface {
+    windowWidth: number,
+    server: string,
     userID: any,
     userInfo: Array<any>,
     myChatsArray: Array<any>,
     textareaHeight: number,
     isLoading: boolean,
-}>{
-    constructor(props: any) {
+}
+
+type Props = RouteComponentProps & StateProps & DispatchProps
+
+class Chat extends React.Component<
+    Props,
+    ChatInterface
+>{
+    constructor(props: Props) {
         super(props);
         let windowWidth = document.body.clientWidth;
         this.state = {
@@ -43,11 +61,9 @@ class Chat extends React.Component<any, {
     componentDidUpdate = (nextProps: any) => {
         if(nextProps.selectedChatRoom.chat_id !== this.props.selectedChatRoom.chat_id) {
             if(Object.keys(this.props.selectedChatRoom).length !== 0 && this.state.windowWidth <= 414) {
-                // isMobileAndChatClicked = true
                 this.props.toggleMobileAndChatSelected(true)
             }
             if(Object.keys(this.props.selectedChatRoom).length === 0 && this.state.windowWidth <= 414) {
-                // isMobileAndChatClicked = false
                 this.props.toggleMobileAndChatSelected(false)
             }
             this.setState({
@@ -137,7 +153,6 @@ class Chat extends React.Component<any, {
                         userInfo={userInfo}
                         userID={userID}
                         props={this.props}
-                        selectChatRoom={this.props.selectChatRoom}
                     />
                 ):(
                     <div></div>

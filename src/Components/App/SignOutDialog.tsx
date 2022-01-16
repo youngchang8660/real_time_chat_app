@@ -1,25 +1,23 @@
 import * as React from 'react';
-import { withRouter } from 'react-router-dom';
-import {connect} from 'react-redux';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
-import { toggleLogoutDialog } from '../../redux/actions';
 
-export interface logOutDialog {
-    logoutDialogOpen: boolean
+interface logOutDialogProps {
+    logoutDialogOpen: boolean,
+    onRequestCloseModal: (action: boolean) => void,
+    props: any
 }
 
-class SignOutDialog extends React.Component<any>{
-
+class SignOutDialog extends React.Component<
+    logOutDialogProps
+>{
     handleClose = (action: boolean) => {
         if(action) {
-            this.props.toggleLogoutDialog(false);
-            this.props.history.push('/login');
-        } else {
-            this.props.toggleLogoutDialog(false)
+            this.props.props.history.push('/login');
         }
+        this.props.onRequestCloseModal(false);
     }
 
     render() {
@@ -47,16 +45,4 @@ class SignOutDialog extends React.Component<any>{
     }
 }
 
-function mapStateToProps(state: any) {
-    return {
-        logoutDialogOpen: state.logoutDialogOpen
-    }
-}
-
-function matchDispatchToProps(dispatch: any) {
-    return {
-        toggleLogoutDialog: (signOutDialogOpen: any) => dispatch(toggleLogoutDialog(signOutDialogOpen))
-    }
-}
-
-export default withRouter(connect(mapStateToProps, matchDispatchToProps)(SignOutDialog));
+export default SignOutDialog;

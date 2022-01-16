@@ -1,10 +1,11 @@
 const express = require('express');
+const http = require("http");
 const mysql = require('mysql');
 const app = express();
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const cors = require('cors');
-const { send } = require('process');
+const server = http.createServer(app);
 
 app.use(cors());
 app.use(express.json({limit: '50mb'}))
@@ -392,6 +393,6 @@ app.delete('/api/deleteMessage', async (req, res) => {
     }
 })
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`Server running on ${port}`)
 })

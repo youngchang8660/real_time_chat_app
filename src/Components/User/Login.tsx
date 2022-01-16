@@ -1,17 +1,23 @@
 import React from 'react';
+import { RouteComponentProps } from "react-router-dom";
 import { TextField, Button } from '@material-ui/core';
 import axios from 'axios';
 import qs from 'qs';
 import MessageSnackbar from '../Reusable/MessageSnackbar';
 
-class Login extends React.Component<any, {
-    userID: any,
-    password: any,
-    snackbarMessage: any,
+interface LoginState {
+    userID: string,
+    password: string,
+    snackbarMessage: string,
     isSnackbarOpen: boolean,
-    status: number,
-}>{
-    constructor(props: any) {
+    status: number
+}
+
+class Login extends React.Component<
+    RouteComponentProps,
+    LoginState
+>{
+    constructor(props: RouteComponentProps) {
         super(props)
         this.state = {
             userID: "",
@@ -54,8 +60,6 @@ class Login extends React.Component<any, {
                 }
             }).catch(err => {
                 if(err.response.status === 500) {
-                    console.log(err.response.status)
-                    console.log(err.response.data)
                     this.setState({
                         snackbarMessage: err.response.data,
                         isSnackbarOpen: true,

@@ -1,11 +1,12 @@
 import React from "react";
+import { RouteComponentProps } from "react-router-dom";
 import Button from '@mui/material/Button';
 import axios from "axios";
 import qs from 'qs';
 import Avatar from 'react-avatar';
 import MessageSnackbar from '../Reusable/MessageSnackbar';
 
-class Profile extends React.Component<any, {
+interface ProfileState {
     server: any,
     userID: any,
     firstName: any,
@@ -16,8 +17,13 @@ class Profile extends React.Component<any, {
     snackbarMessage: any,
     isSnackbarOpen: boolean,
     status: number,
-}>{
-    constructor(props: any) {
+}
+
+class Profile extends React.Component<
+    RouteComponentProps,
+    ProfileState
+>{
+    constructor(props: RouteComponentProps) {
         super(props);
         this.state = {
             server: 'http://localhost:5032',

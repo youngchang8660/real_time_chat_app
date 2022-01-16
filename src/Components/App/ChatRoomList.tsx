@@ -2,6 +2,14 @@ import React from 'react';
 import {connect} from 'react-redux';
 import { selectChatRoom } from '../../redux/actions';
 
+interface StateProps {
+    selectedChatRoom: any
+}
+
+interface DispatchProps {
+    selectChatRoom: (chat: any) => void
+}
+
 interface ChatProps {
     userInfo: any,
     windowWidth: number,
@@ -10,8 +18,11 @@ interface ChatProps {
     history: any
 }
 
-class ChatRoomList extends React.Component<any, ChatProps> {
+type Props = StateProps & DispatchProps & ChatProps;
 
+class ChatRoomList extends React.Component<
+    Props
+> {
     componentDidMount = () => {
         setTimeout(() => {
             this.loadDefaultSelectedChatRoom()
@@ -114,16 +125,12 @@ class ChatRoomList extends React.Component<any, ChatProps> {
     }
 }
 
-function mapStateToProps(state: any) {
-    return {
-        selectedChatRoom: state.selectedChatRoom
-    }
-}
+const mapStateToProps = (state: StateProps) => ({
+    selectedChatRoom: state.selectedChatRoom
+})
 
-function matchDispatchToProps(dispatch: any) {
-    return {
-        selectChatRoom: (chat: any) => dispatch(selectChatRoom(chat))
-    }
-}
+const matchDispatchToProps = (dispatch: any) => ({
+    selectChatRoom: (chat: any) => dispatch(selectChatRoom(chat))
+})
 
 export default connect(mapStateToProps, matchDispatchToProps)(ChatRoomList);

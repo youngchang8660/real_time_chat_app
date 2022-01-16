@@ -13,16 +13,34 @@ import { connect } from 'react-redux';
 
 const darkTheme = createTheme({ palette: { mode: 'dark' } });
 
-class ChatRoom extends React.Component<any, {
-    server: any,
+interface StateProps {
+    selectedChatRoom: any
+}
+
+interface PropsInterface {
+    windowWidth: number
+    userInfo: Array<any>,
+    userID: string,
+    props: any,
+}
+
+interface ChatRoomStateInterface {
+    server: string,
     selectedChatRoom: any,
     allMessages: Array<any>,
     hoveredSentMessage: any,
     isEditMessageOpen: boolean,
     editMessageInfo: any,
     messageText: string,
-}>{
-    constructor(props: any) {
+}
+
+type Props = StateProps & PropsInterface;
+
+class ChatRoom extends React.Component<
+    Props,
+    ChatRoomStateInterface
+>{
+    constructor(props: Props) {
         super(props);
         this.state = {
             server: 'http://localhost:5032',
@@ -420,10 +438,8 @@ class ChatRoom extends React.Component<any, {
     }
 }
 
-function mapStateToProps(state: any) {
-    return {
-        selectedChatRoom: state.selectedChatRoom
-    }
-}
+const mapStateToProps = (state: StateProps) => ({
+    selectedChatRoom: state.selectedChatRoom 
+})
 
 export default connect(mapStateToProps)(ChatRoom);

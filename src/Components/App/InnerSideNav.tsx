@@ -1,4 +1,5 @@
 import React from 'react';
+import { RouteComponentProps } from "react-router-dom";
 import 'rsuite/dist/rsuite.min.css';
 import { Sidenav, Nav } from 'rsuite';
 import WechatOutlineIcon from '@rsuite/icons/WechatOutline';
@@ -8,22 +9,39 @@ import { withRouter } from 'react-router-dom';
 import ExitIcon from '@rsuite/icons/Exit';
 import NoticeIcon from '@rsuite/icons/Notice';
 import {connect} from 'react-redux';
-import { toggleLogoutDialog, selectChatRoom, toggleMobileAndChatSelected } from '../../redux/actions';
+import { selectChatRoom, toggleMobileAndChatSelected } from '../../redux/actions';
 import SignOutDialog from './SignOutDialog';
 
-class InnerSideNav extends React.Component<any, {
+interface StateProps {
+    selectedChatRoom: any,
+    isMobileAndChatClicked: boolean
+}
+
+interface DispatchProps {
+    selectChatRoom: (chat: any) => void,
+    toggleMobileAndChatSelected: (action: boolean) => void
+}
+
+interface InnerSideNavState {
     toggleExpanded: boolean,
     activeKey: any,
     signOutDialogOpen: boolean,
     isLogoutClicked: boolean,
-}>{
-    constructor(props: any) {
+}
+
+type Props = StateProps & DispatchProps & RouteComponentProps;
+
+class InnerSideNav extends React.Component<
+    Props,
+    InnerSideNavState
+>{
+    constructor(props: Props) {
         super(props);
         this.state = {
             toggleExpanded: false,
             activeKey: '1',
             signOutDialogOpen: false,
-            isLogoutClicked: false
+            isLogoutClicked: false,
         }
     }
 
@@ -49,7 +67,7 @@ class InnerSideNav extends React.Component<any, {
                 break;
             case "5":
                 this.props.selectChatRoom({});
-                this.props.toggleLogoutDialog(true)
+                this.closeLogOutDialog(true);
                 break;   
             default:
                 break;
@@ -59,7 +77,11 @@ class InnerSideNav extends React.Component<any, {
         })
     }
 
-    
+    closeLogOutDialog = (action: boolean) => {
+        this.setState({
+            signOutDialogOpen: action
+        })
+    }
 
     render() {
         let { toggleExpanded } = this.state;
@@ -95,26 +117,24 @@ class InnerSideNav extends React.Component<any, {
                         </Sidenav.Body>
                     </Sidenav>
                 </div>
-                {this.props.logoutDialogOpen === true && <SignOutDialog />}
+                <SignOutDialog
+                    logoutDialogOpen={this.state.signOutDialogOpen}
+                    onRequestCloseModal={this.closeLogOutDialog}
+                    props={this.props}
+                />
             </div>
         )
     }
 }
 
-function mapStateToProps(state: any) {
-    return {
-        logoutDialogOpen: state.logoutDialogOpen,
-        selectedChatRoom: state.selectedChatRoom,
-        isMobileAndChatClicked: state.isMobileAndChatClicked,
-    }
-}
+const mapStateToProps = (state: StateProps) => ({
+    selectedChatRoom: state.selectedChatRoom,
+    isMobileAndChatClicked: state.isMobileAndChatClicked,
+})
 
-function matchDispatchToProps(dispatch: any) {
-    return {
-        toggleLogoutDialog: () => dispatch(toggleLogoutDialog()),
-        selectChatRoom: (chat: any) => dispatch(selectChatRoom(chat)),
-        toggleMobileAndChatSelected: () => dispatch(toggleMobileAndChatSelected())
-    }
-}
+const matchDispatchToProps = (dispatch: any) => ({
+    selectChatRoom: (chat: any) => dispatch(selectChatRoom(chat)),
+    toggleMobileAndChatSelected: (action: boolean) => dispatch(toggleMobileAndChatSelected(action))
+})
 
 export default withRouter(connect(mapStateToProps, matchDispatchToProps)(InnerSideNav));

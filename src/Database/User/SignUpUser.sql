@@ -5,7 +5,7 @@
 --     DECLARE rnd_str text;
 -- 	DECLARE myCount INT DEFAULT 0;
 -- 	SET rnd_str := lpad(conv(floor(rand()*pow(36,6)), 10, 36), 6, 0);
--- 	SET myCount = (SELECT COUNT(*) FROM Users WHERE user_id = new_user_id OR user_unique_id = rnd_str);
+-- 	SET myCount = (SELECT COUNT(*) FROM Users WHERE user_id = new_user_id OR user_unique_id = rnd_str OR email = new_email);
 -- 	IF (myCount = 0) THEN
 -- 	INSERT INTO Users (
 -- 		user_unique_id,

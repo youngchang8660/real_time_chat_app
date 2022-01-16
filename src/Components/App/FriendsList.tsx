@@ -1,5 +1,6 @@
 import axios from "axios";
 import React from "react";
+import { RouteComponentProps } from "react-router-dom";
 import SearchIcon from '@mui/icons-material/Search';
 import TextsmsIcon from '@mui/icons-material/Textsms';
 import Box from '@mui/material/Box';
@@ -18,21 +19,54 @@ const style = {
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
-  };
+};
 
-class FriendsList extends React.Component<any, {
-    server: any,
-    currentTab: any,
-    friendUserID: any,
+interface FriendsDataInterface {
+    first_name: string,
+    last_name: string,
+    user_id: string,
+    user_image: string,
+    user_unique_id: string
+}
+
+interface PendingRequestDataInterface {
+    email: string,
+    first_name: string,
+    last_name: string,
+    request_id: number,
+    status: number,
+    user_id: string,
+    user_image: string,
+    user_unique_id: string
+}
+
+interface SearchedUserDataInterface {
+    first_name: string,
+    last_name: string,
+    status: any,
+    user_id: string,
+    user_image: string,
+    user_unique_id: string
+}
+
+interface FriendsListState {
+    server: string,
+    currentTab: string,
+    friendUserID: string,
     userID: any,
-    recipient: any,
-    friendsData: Array<any>,
-    pendingRequestsData: Array<any>,
-    searchedUsersData: Array<any>,
+    recipient: string,
+    friendsData: Array<FriendsDataInterface>,
+    pendingRequestsData: Array<PendingRequestDataInterface>,
+    searchedUsersData: Array<SearchedUserDataInterface>,
     isStartConversationModalOpen: boolean,
-    messageText: any,
-}>{
-    constructor(props: any) {
+    messageText: string,
+}
+
+class FriendsList extends React.Component<
+    RouteComponentProps,
+    FriendsListState
+>{
+    constructor(props: RouteComponentProps) {
         super(props);
         this.state = {
             server: 'http://localhost:5032',
@@ -165,7 +199,7 @@ class FriendsList extends React.Component<any, {
             status
         };
         axios.put(`${server}/api/acceptOrRejectRequest`, insertData)
-            .then(res => {
+            .then(() => {
                 this.getAllPendingRequests();
             })
     }
