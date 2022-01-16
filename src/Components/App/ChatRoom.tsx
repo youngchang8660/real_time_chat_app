@@ -226,7 +226,10 @@ class ChatRoom extends React.Component<
                             )}
                             {windowWidth <= 414 ?
                             (
-                                <img className="message-profile-image" src={selectedChatRoom['user_image']} alt="friend-img" />
+                                <img 
+                                    className="message-profile-image" 
+                                    src={selectedChatRoom['user_image'] !== "" ? selectedChatRoom['user_image'] : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"} 
+                                    alt="friend-img" />
                             ):(
                                 <div></div>
                             )}
