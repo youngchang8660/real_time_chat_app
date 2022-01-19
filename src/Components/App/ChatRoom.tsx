@@ -58,7 +58,7 @@ class ChatRoom extends React.Component<
     componentDidMount = () => {
         this.fetchChatMessages(this.props.selectedChatRoom);
         socket.emit("join", this.props.selectedChatRoom.chat_id);
-        socket.on("chat message", data => {
+        socket.on("get message", data => {
             this.setState({
                 allMessages: [...this.state.allMessages, {
                     Chat_id: data.chatID,
@@ -74,6 +74,7 @@ class ChatRoom extends React.Component<
 
     componentDidUpdate = (prevProps: any) => {
         if(this.props.selectedChatRoom.chat_id !== prevProps.selectedChatRoom.chat_id) {
+            console.log(this.props.selectedChatRoom.chat_id)
             this.fetchChatMessages(this.props.selectedChatRoom);
         }
     }
@@ -119,7 +120,7 @@ class ChatRoom extends React.Component<
             sender: userID,
             messageText: messageText
         };
-        socket.emit('chat message', data);
+        socket.emit('send message', data);
         let url = `${server}/api/sendMessage`;
         axios.post(url, {
             data
@@ -161,7 +162,7 @@ class ChatRoom extends React.Component<
             sender: message['Sender'],
             messageText: message['Message_text']
         }
-        socket.emit('chat message', data);
+        socket.emit('send message', data);
         let url = `${server}/api/editMessage`;
         axios.put(url, {
             data
@@ -184,7 +185,7 @@ class ChatRoom extends React.Component<
             messageID: message['Message_id'],
             sender: message['Sender']
         }
-        socket.emit('chat message', data);
+        socket.emit('send message', data);
         let url = `${server}/api/deleteMessage`;
         axios.delete(url, {
             data

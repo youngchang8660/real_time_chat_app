@@ -23,9 +23,14 @@ io.on("connection", (socket) => {
         socket.join(room);
     })
 
-    socket.on("chat message", (data) => {
+    // socket.on("chat message", (data) => {
+    //     const { chatID } = data;
+    //     io.to(chatID).emit('chat message', data);
+    // })
+
+    socket.on("send message", (data) => {
         const { chatID } = data;
-        io.to(chatID).emit('chat message', data);
+        io.to(chatID).emit('get message', data);
     })
 
     socket.on("disconnect", () => {
