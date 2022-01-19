@@ -16,7 +16,7 @@ interface DispatchProps {
     toggleMobileAndChatSelected: (action: boolean) => void
 }
 
-interface ChatInterface {
+interface ChatStateInterface {
     windowWidth: number,
     server: string,
     userID: any,
@@ -30,7 +30,7 @@ type Props = RouteComponentProps & StateProps & DispatchProps
 
 class Chat extends React.Component<
     Props,
-    ChatInterface
+    ChatStateInterface
 >{
     constructor(props: Props) {
         super(props);
@@ -58,8 +58,8 @@ class Chat extends React.Component<
         })
     }
     
-    componentDidUpdate = (nextProps: any) => {
-        if(nextProps.selectedChatRoom.chat_id !== this.props.selectedChatRoom.chat_id) {
+    componentDidUpdate = (prevProps: any) => {
+        if(prevProps.selectedChatRoom.chat_id !== this.props.selectedChatRoom.chat_id) {
             if(Object.keys(this.props.selectedChatRoom).length !== 0 && this.state.windowWidth <= 414) {
                 this.props.toggleMobileAndChatSelected(true)
             }
@@ -120,7 +120,7 @@ class Chat extends React.Component<
                 })
             })
     }
-
+    
     convertBufferArrayToDataURL = (arrayData: any, type = "image/png") => {
         const arrayBuffer = new Uint8Array(arrayData);
         const blob = new Blob([arrayBuffer], { type: type });

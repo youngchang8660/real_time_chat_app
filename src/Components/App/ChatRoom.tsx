@@ -10,8 +10,10 @@ import EditIcon from '@mui/icons-material/Edit';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { Button } from '@mui/material';
 import { connect } from 'react-redux';
+import io from "socket.io-client";
 
 const darkTheme = createTheme({ palette: { mode: 'dark' } });
+const socket = io('http://localhost:5032');
 
 interface StateProps {
     selectedChatRoom: any
@@ -54,12 +56,31 @@ class ChatRoom extends React.Component<
     }
 
     componentDidMount = () => {
-        this.fetchChatMessages(this.props.selectedChatRoom)
+        this.fetchChatMessages(this.props.selectedChatRoom);
+        socket.emit("join", this.props.selectedChatRoom.chat_id);
+        socket.on("chat message", data => {
+            this.setState({
+                allMessages: [...this.state.allMessages, {
+                    Chat_id: data.chatID,
+                    Message_Date_Time: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+                    Message_text: data.messageText, 
+                    Sender: data.sender 
+                }]
+            }, () => {
+                this.fetchChatMessages(this.props.selectedChatRoom);
+            })
+        })
     }
 
-    componentDidUpdate = (nextProps: any) => {
-        if(this.props.selectedChatRoom.chat_id !== nextProps.selectedChatRoom.chat_id) {
+    componentDidUpdate = (prevProps: any) => {
+        if(this.props.selectedChatRoom.chat_id !== prevProps.selectedChatRoom.chat_id) {
             this.fetchChatMessages(this.props.selectedChatRoom);
+        }
+    }
+
+    componentWillUnmount() {
+        if(socket) {
+            socket.disconnect();
         }
     }
 
@@ -98,6 +119,7 @@ class ChatRoom extends React.Component<
             sender: userID,
             messageText: messageText
         };
+        socket.emit('chat message', data);
         let url = `${server}/api/sendMessage`;
         axios.post(url, {
             data
@@ -139,6 +161,7 @@ class ChatRoom extends React.Component<
             sender: message['Sender'],
             messageText: message['Message_text']
         }
+        socket.emit('chat message', data);
         let url = `${server}/api/editMessage`;
         axios.put(url, {
             data
@@ -156,15 +179,16 @@ class ChatRoom extends React.Component<
 
     deleteMessage = (message: any) => {
         let { server, selectedChatRoom } = this.state;
+        let data = {
+            chatID: message['Chat_id'],
+            messageID: message['Message_id'],
+            sender: message['Sender']
+        }
+        socket.emit('chat message', data);
         let url = `${server}/api/deleteMessage`;
         axios.delete(url, {
-            data: {
-                chatID: message['Chat_id'],
-                messageID: message['Message_id'],
-                sender: message['Sender']
-            }
-        })
-        .then(() => {
+            data
+        }).then(() => {
             this.fetchChatMessages(selectedChatRoom);
         }).catch(err => {
             console.log(err.message);
@@ -255,7 +279,7 @@ class ChatRoom extends React.Component<
                                             {messageDate !== prevDate ?
                                             (
                                                 <div className="dateRow" key={Math.random()}>
-                                                    {moment(new Date(messageDate)).format('dddd MMMM D YYYY')}
+                                                    {moment(new Date(message.Message_Date_Time)).format('dddd MMMM D YYYY')}
                                                 </div>
                                             ):(
                                                 <div key={Math.random()}></div>
@@ -378,7 +402,7 @@ class ChatRoom extends React.Component<
                                             {messageDate !== prevDate ?
                                             (
                                                 <div className="dateRow" key={Math.random()}>
-                                                    {moment(new Date(messageDate)).format('dddd MMMM D YYYY')}
+                                                    {moment(new Date(message.Message_Date_Time)).format('dddd MMMM D YYYY')}
                                                 </div>
                                             ):(
                                                 <div key={Math.random()}></div>

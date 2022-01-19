@@ -6,6 +6,33 @@ const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const cors = require('cors');
 const server = http.createServer(app);
+const socketIo = require("socket.io");
+const io = socketIo(server, {
+    cors: {
+        origin: '*',
+        methods: ["GET", "POST"],
+    }
+});
+
+io.on("connection", (socket) => {
+    const { id } = socket.client;
+    console.log(`User connected: ${id}`);
+
+    socket.on("join", (room) => {
+        console.log(`Socket ${socket.id} joining ${room}`);
+        socket.join(room);
+    })
+
+    socket.on("chat message", (data) => {
+        const { chatID } = data;
+        io.to(chatID).emit('chat message', data);
+    })
+
+    socket.on("disconnect", () => {
+        console.log('User disconnected');
+
+    })
+})
 
 app.use(cors());
 app.use(express.json({limit: '50mb'}))
