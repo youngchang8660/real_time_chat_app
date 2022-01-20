@@ -24,6 +24,7 @@ interface PropsInterface {
     userInfo: Array<any>,
     userID: string,
     props: any,
+    joinedChatRooms: Array<any>
 }
 
 interface ChatRoomStateInterface {
@@ -57,30 +58,35 @@ class ChatRoom extends React.Component<
 
     componentDidMount = () => {
         this.fetchChatMessages(this.props.selectedChatRoom);
-        socket.emit("join", this.props.selectedChatRoom.chat_id);
+        for(let i = 0; i < this.props.joinedChatRooms.length; i++) {
+            socket.emit("join", this.props.joinedChatRooms[i])
+        }
         socket.on("get message", data => {
-            this.setState({
-                allMessages: [...this.state.allMessages, {
-                    Chat_id: data.chatID,
-                    Message_Date_Time: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-                    Message_text: data.messageText, 
-                    Sender: data.sender 
-                }]
-            }, () => {
-                this.fetchChatMessages(this.props.selectedChatRoom);
-            })
+            console.log(data)
+            if(data.chatID === this.props.selectedChatRoom.chat_id) {
+                this.setState({
+                    allMessages: [...this.state.allMessages, {
+                        Chat_id: data.chatID,
+                        Message_Date_Time: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+                        Message_text: data.messageText, 
+                        Sender: data.sender 
+                    }]
+                }, () => {
+                    this.fetchChatMessages(this.props.selectedChatRoom);
+                })
+            }
         })
     }
 
-    componentDidUpdate = (prevProps: any) => {
+    componentDidUpdate = (prevProps: any, prevState: any) => {
         if(this.props.selectedChatRoom.chat_id !== prevProps.selectedChatRoom.chat_id) {
-            console.log(this.props.selectedChatRoom.chat_id)
             this.fetchChatMessages(this.props.selectedChatRoom);
         }
     }
 
     componentWillUnmount() {
         if(socket) {
+            console.log('user disconnected')
             socket.disconnect();
         }
     }
@@ -197,7 +203,8 @@ class ChatRoom extends React.Component<
     }
 
     onClickHandleSubmitMessage = (e: any, action: any, message: any) => {
-        if(e.keyCode === 13) {
+        let regExp = /[a-zA-Z]/g;
+        if(e.keyCode === 13 && regExp.test(e.currentTarget.value)) {
             if(action === 'new') {
                 this.sendMessage();
             } else {

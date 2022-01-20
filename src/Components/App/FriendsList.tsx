@@ -463,7 +463,7 @@ class FriendsList extends React.Component<
                             Start your new conservation
                         </Typography>
                         <input 
-                            style={{width: '100%'}} 
+                            style={{width: '100%', color: 'black', border: '1px solid gray'}} 
                             onChange={(e) => {this.onChangeMessageText(e)}} 
                         />
                         <Button

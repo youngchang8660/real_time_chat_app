@@ -24,6 +24,7 @@ interface ChatStateInterface {
     myChatsArray: Array<any>,
     textareaHeight: number,
     isLoading: boolean,
+    joinedChatRooms: Array<any>
 }
 
 type Props = RouteComponentProps & StateProps & DispatchProps
@@ -43,6 +44,7 @@ class Chat extends React.Component<
             myChatsArray: [],
             textareaHeight: 0,
             isLoading: false,
+            joinedChatRooms: []
         }
     }
 
@@ -70,6 +72,7 @@ class Chat extends React.Component<
                 isLoading: false,
             })
         }
+
     }
 
     detectWindowSizeChange = () => {
@@ -105,19 +108,26 @@ class Chat extends React.Component<
     getAllChats = () => {
         let { server, userID } = this.state;
         let myChatsArray:any = [];
+        let joinedChatRooms: any = [];
         axios.get(`${server}/api/getAllChats/${userID}`)
             .then((res: any) => {
-                myChatsArray = res.data;
-                for(let i = 0; i < myChatsArray.length; i++) {
-                    if(myChatsArray[i].user_image !== null) {
-                        myChatsArray[i].user_image = this.convertBufferArrayToDataURL(myChatsArray[i].user_image.data);
-                    } else {
-                        myChatsArray[i].user_image = "";
+                if(res.data.length !== this.state.joinedChatRooms.length) {
+                    myChatsArray = res.data;
+                    for(let i = 0; i < myChatsArray.length; i++) {
+                        if(myChatsArray[i].user_image !== null) {
+                            myChatsArray[i].user_image = this.convertBufferArrayToDataURL(myChatsArray[i].user_image.data);
+                        } else {
+                            myChatsArray[i].user_image = "";
+                        }
+                        joinedChatRooms.push(myChatsArray[i].chat_id)
                     }
+                    this.setState({
+                        myChatsArray,
+                        joinedChatRooms
+                    }, () => {
+                        this.props.selectChatRoom(this.state.myChatsArray[0])
+                    })
                 }
-                this.setState({
-                    myChatsArray,
-                })
             })
     }
     
@@ -153,6 +163,7 @@ class Chat extends React.Component<
                         userInfo={userInfo}
                         userID={userID}
                         props={this.props}
+                        joinedChatRooms={this.state.joinedChatRooms}
                     />
                 ):(
                     <div></div>

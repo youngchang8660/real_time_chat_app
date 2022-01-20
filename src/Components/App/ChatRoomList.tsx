@@ -26,27 +26,16 @@ class ChatRoomList extends React.Component<
     componentDidMount = () => {
         setTimeout(() => {
             this.loadDefaultSelectedChatRoom()
-        }, 1000)
+        }, 100)
     }
 
     loadDefaultSelectedChatRoom = () => {
-        let urlLastFragment = window.location.pathname.split("/").pop();
-        if(urlLastFragment !== undefined) {
-            if(urlLastFragment.length === 36) {
-                for(let i = 0; i < this.props.chatsData.length; i++) {
-                    if(this.props.chatsData[i].chat_id === urlLastFragment) {
-                        this.props.selectChatRoom(this.props.chatsData[i]);
-                    }
-                }
-            } else {
-                this.props.selectChatRoom({});
-            }
+        console.log(this.props.selectedChatRoom)
+        if(Object.keys(this.props.selectedChatRoom).length !== 0) {
+            this.props.history.push(`/chatApp/chat/${this.props.selectedChatRoom.chat_id}`)
         }
     }
 
-    componentWillUnmount = () => {
-        this.loadDefaultSelectedChatRoom()
-    }
 
     onClickHandleChatRoom = (chat: any) => {
         let chatID = chat.chat_id;
