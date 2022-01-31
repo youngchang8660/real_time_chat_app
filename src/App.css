@@ -125,15 +125,16 @@ and (orientation: landscape) {
 
 .sideNavBody {
   width: 56px;
-  height: 100vh;
-  /* background: #191b22; */
+  min-height: 100vh;
+  height: 100%;
 }
 
 .sideNav {
   height: 100%;
   width: 56px;
-  /* background: #191b22; */
-  /* background-color: #191b22 !important; */
+  position: fixed;
+  left: 0;
+  top: 0;
 }
 
 @media all and (min-width: 480px) {

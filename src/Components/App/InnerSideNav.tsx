@@ -49,13 +49,12 @@ class InnerSideNav extends React.Component<
     onChangeSelect = (eventKey: any) => {
         switch(eventKey) {
             case "1":
-                if(!this.props.isMobileAndChatClicked) {
-                    this.props.history.push(`/chatApp/chat/${this.props.selectedChatRoom.chat_id}`);
-                    this.props.toggleMobileAndChatSelected(false);
+                if(this.props.isMobileAndChatClicked) {
+                    this.props.selectChatRoom({});
+                    this.props.history.push('/chatApp/chat');
+                    this.props.toggleMobileAndChatSelected(true);
                 } else {
-                    this.props.selectChatRoom({})
-                    this.props.history.push('/chatApp/chat')
-                    this.props.toggleMobileAndChatSelected(false);
+                    this.props.history.push(`/chatApp/chat/${this.props.selectedChatRoom.chat_id}`);
                 }
                 break;
             case "2":

@@ -16,7 +16,7 @@ interface StateProps {
 
 interface DispatchProps {
     selectChatRoom: (chat: any) => void,
-    toggleMobileAndChatSelected: (action: boolean) => void
+    toggleMobileAndChatSelected: (isToggle: boolean) => void
 }
 
 interface ChatStateInterface {
@@ -59,27 +59,31 @@ class Chat extends React.Component<
         if(this.state.userID === null || this.state.userID === undefined) {
             return this.props.history.push('/')
         }
+        if(!this.props.isMobileAndChatClicked && Object.keys(this.props.selectedChatRoom).length === 0) {
+            this.props.history.push("/chatApp/chat")
+        }
         this.getMyInfo();
         this.getAllChats();
         this.getUnreadMessage();
+        this.detectWindowSizeChange();
         window.addEventListener("resize", this.detectWindowSizeChange);
     }
 
     componentDidUpdate(prevProps: any) {
         if(prevProps.selectedChatRoom.chat_id !== this.props.selectedChatRoom.chat_id) {
             this.fetchChatMessages(this.props.selectedChatRoom.chat_id);
-            if(Object.keys(this.props.selectedChatRoom).length !== 0 && this.state.windowWidth <= 414) {
-                this.props.toggleMobileAndChatSelected(true)
-            }
-            if(Object.keys(this.props.selectedChatRoom).length === 0 && this.state.windowWidth <= 414) {
-                this.props.toggleMobileAndChatSelected(false)
-            }
         }
     }
 
     detectWindowSizeChange = () => {
         this.setState({
             windowWidth: document.body.clientWidth
+        }, () => {
+            if(this.state.windowWidth <= 414) {
+                this.props.toggleMobileAndChatSelected(true)
+            } else {
+                this.props.toggleMobileAndChatSelected(false)
+            }
         })
     }
 
@@ -144,7 +148,6 @@ class Chat extends React.Component<
     fetchChatMessages = (chatRoomID: string) => {
         axios.get(`${this.state.server}/api/getMessages/${chatRoomID}`)
             .then((res: any) => {
-                let data = res.data.map((a: any) => Object.assign({}, a));
                 if(chatRoomID === this.props.selectedChatRoom.chat_id) {
                     this.setState({
                         selectedRoomMessages: res.data.map((a: any) => Object.assign({}, a))
@@ -296,7 +299,7 @@ function mapStateToProps(state: any) {
 function matchDispatchToProps(dispatch: any) {
     return {
         selectChatRoom: (chat: any) => dispatch(selectChatRoom(chat)),
-        toggleMobileAndChatSelected: () => dispatch(toggleMobileAndChatSelected())
+        toggleMobileAndChatSelected: (isToggle: boolean) => dispatch(toggleMobileAndChatSelected(isToggle))
     }
 }
 

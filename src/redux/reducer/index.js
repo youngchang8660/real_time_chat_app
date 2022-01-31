@@ -16,7 +16,7 @@ function rootReducer(state = initialState, action) {
         case TOGGLE_MOBILE_AND_CHAT_SELECTED:
             return {
                 ...state,
-                isMobileAndChatClicked: !state.isMobileAndChatClicked
+                isMobileAndChatClicked: action.payload
             }
         default:
             break;

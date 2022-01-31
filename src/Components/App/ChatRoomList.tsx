@@ -59,10 +59,14 @@ class ChatRoomList extends React.Component<
     
     componentDidUpdate() {
         if(this.props.chatsData.length > 0 && this.props.unReadMessageArray.length !== this.state.unReadMessageArray.length) {
-            let unReadMessageByUsers = new Array();
-            this.props.chatsData.map((chat: any) => {
+            let unReadMessageByUsers: any = [];
+            // this.props.chatsData.map((chat: any) => {
+            //     let obj = { userId: chat.user_id, num: 0 };
+            //     unReadMessageByUsers.push(obj);
+            // })
+            this.props.chatsData.forEach((chat: any) => {
                 let obj = { userId: chat.user_id, num: 0 };
-                unReadMessageByUsers.push(obj);
+                return unReadMessageByUsers.push(obj);
             })
             for(let i = 0; i < this.props.unReadMessageArray.length; i++) {
                 for(let y = 0; y < unReadMessageByUsers.length; y++) {
@@ -113,7 +117,9 @@ class ChatRoomList extends React.Component<
                             let numberOfUnreadMessage: number = 0;
                             this.state.unReadMessageByUsers.map((data: any) => {
                                 if(data.userId === userId) {
-                                    numberOfUnreadMessage = data.num;
+                                    return numberOfUnreadMessage = data.num;
+                                } else {
+                                    return numberOfUnreadMessage
                                 }
                             })
                             return (
