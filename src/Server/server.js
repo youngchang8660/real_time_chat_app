@@ -16,7 +16,6 @@ const io = socketIo(server, {
 
 io.on("connection", (socket) => {
     const { id } = socket.client;
-    console.log(`User connected: ${id}`);
 
     socket.on("join", (room) => {
         console.log(`Socket ${socket.id} joining ${room}`);
@@ -416,6 +415,63 @@ app.delete('/api/deleteMessage', async (req, res) => {
         })
     }catch(err) {
         console.log(err.message, 'Failed to fetch delete message');
+        return res.status(500).json(err.message);
+    }
+})
+
+// save unread message
+app.post('/api/saveUnreadMessage', async (req, res) => {
+    let { recipient, chatID, sender, messageText } = req.body;
+    try {
+        let query = "CALL Save_Unread_Messages (?, ?, ?, ?)";
+        connection.query(query, [recipient, chatID, sender, messageText], (err, result) => {
+            if(err) {
+                console.log(err.message);
+                return res.status(500).send('Failed to save unread message');
+            } else {
+                return res.status(200).send(result[0]);
+            }
+        })
+    }catch(err) {
+        console.log(err.message, 'Failed to save unread message');
+        return res.status(500).json(err.message);
+    }
+})
+
+// get all unread message by user_id
+app.get('/api/getUnreadMessage/:userID', async (req, res) => {
+    let { userID } = req.params;
+    try {
+        let query = "CALL Get_All_Unread_Messages (?)";
+        connection.query(query, [userID], (err, result) => {
+            if(err) {
+                console.log(err.message);
+                return res.status(500).send('Failed to fetch unread message');
+            } else {
+                return res.status(200).send(result[0]);
+            }
+        })
+    }catch(err) {
+        console.log(err.message, 'Failed to fetch unread message');
+        return res.status(500).json(err.message);
+    }
+})
+
+// remove unread message
+app.delete('/api/removeUnreadMessage/:messageId', async (req, res) => {
+    let { messageId } = req.params;
+    try {
+        let query = "CALL Remove_Unread_Messages (?)";
+        connection.query(query, [messageId], (err, result) => {
+            if(err) {
+                console.log(err.message);
+                return res.status(500).send('Failed to remove unread message');
+            } else {
+                return res.status(200).send(result[0]);
+            }
+        })
+    }catch(err) {
+        console.log(err.message, 'Failed to remove unread message');
         return res.status(500).json(err.message);
     }
 })

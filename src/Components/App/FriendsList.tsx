@@ -296,7 +296,6 @@ class FriendsList extends React.Component<
         }
         axios(options)
             .then((res: any) => {
-                console.log(res.data)
                 let chatID = res.data[0]['chat_id'];
                 this.props.history.push(`/chatApp/chat/${chatID}`);
             }).catch(err => {
@@ -357,7 +356,7 @@ class FriendsList extends React.Component<
                                                 src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
                                             />
                                         )}
-                                        <h1 className="friend-user-id">{user.first_name.charAt(0).toUpperCase() + user.first_name.slice(1)}</h1>
+                                        <h1 className="friend-user-id">{user.user_id.charAt(0).toUpperCase() + user.user_id.slice(1)}</h1>
                                     </div>
                                     <div style={{display: 'flex'}}>
                                         <div 

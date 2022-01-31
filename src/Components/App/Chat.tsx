@@ -5,6 +5,9 @@ import ChatRoomList from './ChatRoomList';
 import ChatRoom from './ChatRoom';
 import { connect } from 'react-redux';
 import { selectChatRoom, toggleMobileAndChatSelected } from '../../redux/actions';
+import io from "socket.io-client";
+
+const socket = io('http://localhost:5032');
 
 interface StateProps {
     selectedChatRoom: any,
@@ -23,8 +26,10 @@ interface ChatStateInterface {
     userInfo: Array<any>,
     myChatsArray: Array<any>,
     textareaHeight: number,
-    isLoading: boolean,
-    joinedChatRooms: Array<any>
+    joinedChatRooms: Array<any>,
+    selectedRoomMessages: Array<any>,
+    textMessage: string,
+    unReadMessageArray: Array<any>,
 }
 
 type Props = RouteComponentProps & StateProps & DispatchProps
@@ -43,36 +48,33 @@ class Chat extends React.Component<
             userInfo: [],
             myChatsArray: [],
             textareaHeight: 0,
-            isLoading: false,
-            joinedChatRooms: []
+            joinedChatRooms: [],
+            selectedRoomMessages: [],
+            textMessage: "",
+            unReadMessageArray: [],
         }
     }
 
     componentDidMount = () => {
         if(this.state.userID === null || this.state.userID === undefined) {
-            return this.props.history.push('/login')
+            return this.props.history.push('/')
         }
         this.getMyInfo();
         this.getAllChats();
+        this.getUnreadMessage();
         window.addEventListener("resize", this.detectWindowSizeChange);
-        this.setState({
-            isLoading: true
-        })
     }
-    
-    componentDidUpdate = (prevProps: any) => {
+
+    componentDidUpdate(prevProps: any) {
         if(prevProps.selectedChatRoom.chat_id !== this.props.selectedChatRoom.chat_id) {
+            this.fetchChatMessages(this.props.selectedChatRoom.chat_id);
             if(Object.keys(this.props.selectedChatRoom).length !== 0 && this.state.windowWidth <= 414) {
                 this.props.toggleMobileAndChatSelected(true)
             }
             if(Object.keys(this.props.selectedChatRoom).length === 0 && this.state.windowWidth <= 414) {
                 this.props.toggleMobileAndChatSelected(false)
             }
-            this.setState({
-                isLoading: false,
-            })
         }
-
     }
 
     detectWindowSizeChange = () => {
@@ -83,6 +85,7 @@ class Chat extends React.Component<
 
     componentWillUnmount = () => {
         window.removeEventListener("resize", this.detectWindowSizeChange);
+        socket.disconnect();
     }
 
     getMyInfo = () => {
@@ -125,10 +128,113 @@ class Chat extends React.Component<
                         myChatsArray,
                         joinedChatRooms
                     }, () => {
-                        this.props.selectChatRoom(this.state.myChatsArray[0])
+                        for(let i = 0; i < this.state.joinedChatRooms.length; i++) {
+                            socket.emit("join", this.state.joinedChatRooms[i])
+                            this.fetchChatMessages(this.state.joinedChatRooms[i]);
+                        }
+                        if(!this.props.isMobileAndChatClicked) {
+                            this.props.selectChatRoom(this.state.myChatsArray[0]);
+                        }
+                        this.getMessages();
                     })
                 }
             })
+    }
+
+    fetchChatMessages = (chatRoomID: string) => {
+        axios.get(`${this.state.server}/api/getMessages/${chatRoomID}`)
+            .then((res: any) => {
+                let data = res.data.map((a: any) => Object.assign({}, a));
+                if(chatRoomID === this.props.selectedChatRoom.chat_id) {
+                    this.setState({
+                        selectedRoomMessages: res.data.map((a: any) => Object.assign({}, a))
+                    }, () => {
+                        if(Object.keys(this.props.selectedChatRoom).length > 0) {
+                            this.scrollToBottom();   
+                        }
+                    })
+                }
+            }).catch(err => {
+                console.log(err.message)
+            })
+    }
+
+    getMessages = () => {
+        socket.on("get message", data => {
+            if(data.sender !== this.state.userID) {
+                if(this.state.selectedRoomMessages[0].Chat_id === data.chatID) {
+                    this.setState({
+                        selectedRoomMessages: [...this.state.selectedRoomMessages, {
+                            Chat_id: data.chatID,
+                            Message_Date_Time: new Date(),
+                            Message_text: data.messageText, 
+                            Sender: data.sender 
+                        }]
+                    }, () => {
+                        this.scrollToBottom();
+                    })
+                } else {
+                    let requestUrl = `${this.state.server}/api/saveUnreadMessage`;
+                    let requestData = {
+                        recipient: this.state.userID,
+                        chatID: data.chatID,
+                        sender: data.sender,
+                        messageText: data.messageText
+                    };
+                    axios.post(requestUrl, requestData)
+                        .then(() => {
+                            this.getUnreadMessage();
+                        }).catch(err => {
+                            console.log(err.message)
+                        })
+                }
+            }
+        })
+    }
+
+    getUnreadMessage = () => {
+        let { server, userID } = this.state;
+        axios.get(`${server}/api/getUnreadMessage/${userID}`)
+            .then((res: any) => {
+                this.setState({
+                    unReadMessageArray: res.data
+                })
+            }).catch(err => {
+                console.log(err.message)
+            })
+    }
+
+    onChangeTextMessage = (e: any) => {
+        this.setState({
+            textMessage: e.currentTarget.value
+        })
+    }
+
+    sendMessage = (selectedChatRoomID: string, messageText: string) => {
+        let { server } = this.state;
+        let { userID } = this.state;
+        let data = {
+            chatID: selectedChatRoomID,
+            sender: userID,
+            messageText: messageText
+        };
+        socket.emit('send message', data);
+        let url = `${server}/api/sendMessage`;
+        axios.post(url, {
+            data
+        }).then(() => {
+            this.fetchChatMessages(selectedChatRoomID)
+            this.setState({
+                textMessage: ""
+            })
+        }).catch(err => {
+            console.log(err.message)
+        })
+    }
+
+    scrollToBottom = () => {
+        let chatContainer = document.getElementsByClassName('chat-message-text-container');
+        chatContainer[0].scrollTop = chatContainer[0].scrollHeight;
     }
     
     convertBufferArrayToDataURL = (arrayData: any, type = "image/png") => {
@@ -140,11 +246,11 @@ class Chat extends React.Component<
     };
     
     render() {
-        let { windowWidth, userInfo, myChatsArray, userID, isLoading } = this.state;
+        let { windowWidth, userInfo, myChatsArray, userID } = this.state;
         let { selectedChatRoom, isMobileAndChatClicked } = this.props;
         return (
             <div className={windowWidth > 414 ? "chat-page-container" : "mobile-chat-page-container"}>
-                {!isMobileAndChatClicked ?
+                {!isMobileAndChatClicked || (isMobileAndChatClicked && Object.keys(this.props.selectedChatRoom).length === 0) ?
                 (
                     <ChatRoomList 
                         userInfo={userInfo} 
@@ -152,23 +258,29 @@ class Chat extends React.Component<
                         chatsData={myChatsArray} 
                         userID={userID}
                         history={this.props.history}
+                        getUnreadMessage={this.getUnreadMessage}
+                        unReadMessageArray={this.state.unReadMessageArray}
                     />
                 ):(
                     <div></div>
                 )}
-                {Object.keys(selectedChatRoom).length > 0 && !isLoading ?
+                {Object.keys(selectedChatRoom).length > 0 ?
                 (
                     <ChatRoom 
                         windowWidth={windowWidth}
                         userInfo={userInfo}
                         userID={userID}
                         props={this.props}
-                        joinedChatRooms={this.state.joinedChatRooms}
+                        fetchChatMessages={this.fetchChatMessages}
+                        sendMessage={this.sendMessage}
+                        selectedRoomMessages={this.state.selectedRoomMessages}
+                        onChangeTextMessage={this.onChangeTextMessage}
+                        textMessage={this.state.textMessage}
+                        scrollToBottom={this.scrollToBottom}
                     />
                 ):(
                     <div></div>
                 )}
-                
             </div>
         )
     }

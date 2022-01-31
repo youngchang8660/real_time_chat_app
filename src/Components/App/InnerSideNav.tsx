@@ -7,7 +7,6 @@ import PeoplesIcon from '@rsuite/icons/Peoples';
 import GearIcon from '@rsuite/icons/Gear';
 import { withRouter } from 'react-router-dom';
 import ExitIcon from '@rsuite/icons/Exit';
-import NoticeIcon from '@rsuite/icons/Notice';
 import {connect} from 'react-redux';
 import { selectChatRoom, toggleMobileAndChatSelected } from '../../redux/actions';
 import SignOutDialog from './SignOutDialog';
@@ -24,9 +23,10 @@ interface DispatchProps {
 
 interface InnerSideNavState {
     toggleExpanded: boolean,
-    activeKey: any,
+    activeKey: string,
     signOutDialogOpen: boolean,
     isLogoutClicked: boolean,
+    userID: any
 }
 
 type Props = StateProps & DispatchProps & RouteComponentProps;
@@ -42,25 +42,29 @@ class InnerSideNav extends React.Component<
             activeKey: '1',
             signOutDialogOpen: false,
             isLogoutClicked: false,
+            userID: ''
         }
     }
 
     onChangeSelect = (eventKey: any) => {
         switch(eventKey) {
             case "1":
-                this.props.history.push(`/chatApp/chat/${this.props.selectedChatRoom.chat_id}`);
-                this.props.toggleMobileAndChatSelected(false);
+                if(!this.props.isMobileAndChatClicked) {
+                    this.props.history.push(`/chatApp/chat/${this.props.selectedChatRoom.chat_id}`);
+                    this.props.toggleMobileAndChatSelected(false);
+                } else {
+                    this.props.selectChatRoom({})
+                    this.props.history.push('/chatApp/chat')
+                    this.props.toggleMobileAndChatSelected(false);
+                }
                 break;
             case "2":
                 this.props.history.push('/chatApp/friends');
                 break;
             case "3":
-                this.props.history.push('/chatApp/notifications');
-                break;
-            case "4":
                 this.props.history.push('/chatApp/profile');
                 break;
-            case "5":
+            case "4":
                 this.props.selectChatRoom({});
                 this.closeLogOutDialog(true);
                 break;   
@@ -99,13 +103,10 @@ class InnerSideNav extends React.Component<
                                 <Nav.Item  onClick={() => {this.onChangeSelect('2')}} icon={<PeoplesIcon />}>
                                     Friends
                                 </Nav.Item>
-                                <Nav.Item onClick={() => {this.onChangeSelect('3')}} icon={<NoticeIcon />}>
-                                    Notification
-                                </Nav.Item>
-                                <Nav.Item onClick={() => {this.onChangeSelect('4')}} icon={<GearIcon />}>
+                                <Nav.Item onClick={() => {this.onChangeSelect('3')}} icon={<GearIcon />}>
                                     Profile
                                 </Nav.Item>
-                                <Nav.Item onClick={() => {this.onChangeSelect('5')}} icon={<ExitIcon />}>
+                                <Nav.Item onClick={() => {this.onChangeSelect('4')}} icon={<ExitIcon />}>
                                     Log Out
                                 </Nav.Item>
                             </Nav>

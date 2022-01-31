@@ -1,9 +1,11 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import { selectChatRoom } from '../../redux/actions';
+import axios from 'axios';
 
 interface StateProps {
-    selectedChatRoom: any
+    selectedChatRoom: any,
+    isMobileAndChatClicked: boolean
 }
 
 interface DispatchProps {
@@ -15,14 +17,34 @@ interface ChatProps {
     windowWidth: number,
     chatsData: any,
     userID: string,
-    history: any
+    history: any,
+    getUnreadMessage: () => void,
+    unReadMessageArray: Array<any>,
+}
+
+interface ChatRoomListStateInterface {
+    unReadMessageArray: Array<any>,
+    unReadMessageByUsers: Array<any>,
+    server: string,
+    userID: any,
 }
 
 type Props = StateProps & DispatchProps & ChatProps;
 
 class ChatRoomList extends React.Component<
-    Props
+    Props,
+    ChatRoomListStateInterface
 > {
+    constructor(props: Props) {
+        super(props);
+        this.state = {
+            unReadMessageArray: [],
+            unReadMessageByUsers: [],
+            server: 'http://localhost:5032',
+            userID: localStorage.getItem('user_id'),
+        }
+    }
+
     componentDidMount = () => {
         setTimeout(() => {
             this.loadDefaultSelectedChatRoom()
@@ -30,17 +52,49 @@ class ChatRoomList extends React.Component<
     }
 
     loadDefaultSelectedChatRoom = () => {
-        console.log(this.props.selectedChatRoom)
         if(Object.keys(this.props.selectedChatRoom).length !== 0) {
             this.props.history.push(`/chatApp/chat/${this.props.selectedChatRoom.chat_id}`)
         }
     }
-
+    
+    componentDidUpdate() {
+        if(this.props.chatsData.length > 0 && this.props.unReadMessageArray.length !== this.state.unReadMessageArray.length) {
+            let unReadMessageByUsers = new Array();
+            this.props.chatsData.map((chat: any) => {
+                let obj = { userId: chat.user_id, num: 0 };
+                unReadMessageByUsers.push(obj);
+            })
+            for(let i = 0; i < this.props.unReadMessageArray.length; i++) {
+                for(let y = 0; y < unReadMessageByUsers.length; y++) {
+                    if(this.props.unReadMessageArray[i].Sender === unReadMessageByUsers[y].userId) {
+                        unReadMessageByUsers[y].num += 1;
+                        break;
+                    }
+                }
+            }
+            this.setState({
+                unReadMessageArray: this.props.unReadMessageArray,
+                unReadMessageByUsers
+            })
+        }
+    }
 
     onClickHandleChatRoom = (chat: any) => {
         let chatID = chat.chat_id;
-        this.props.selectChatRoom(chat)
+        for(let i = 0; i < this.state.unReadMessageArray.length; i++) {
+            if(this.state.unReadMessageArray[i].Chat_id === chatID) {
+                let messageId = this.state.unReadMessageArray[i].Unread_Message_id;
+                axios.delete(`${this.state.server}/api/removeUnreadMessage/${messageId}`)
+                    .then(() => {
+                        
+                    }).catch(err => {
+                        console.log(err.message)
+                    })
+            }
+        }
+        this.props.selectChatRoom(chat);
         this.props.history.push(`/chatApp/chat/${chatID}`);
+        this.props.getUnreadMessage();
     }
 
     render() {
@@ -55,28 +109,46 @@ class ChatRoomList extends React.Component<
                     </div>
                     <div className={windowWidth > 414 ? "chat-list-container-middle" : "mobile-chat-list-container-middle"}>
                         {this.props.chatsData.map((chat: any) => {
+                            let userId = chat.user_id;
+                            let numberOfUnreadMessage: number = 0;
+                            this.state.unReadMessageByUsers.map((data: any) => {
+                                if(data.userId === userId) {
+                                    numberOfUnreadMessage = data.num;
+                                }
+                            })
                             return (
                                 <div 
                                     key={Math.random()} 
                                     className={this.props.selectedChatRoom === chat ? "clicked-chat-list-row" : "chat-list-row"}
                                     onClick={() => {this.onClickHandleChatRoom(chat)}}
                                 >
-                                    {chat.user_image !== "" ? (
-                                        <img 
-                                            alt="userProfileImage"
-                                            className="chat-profile-image"
-                                            src={chat.user_image} 
-                                            style={{backgroundColor: 'white'}}
-                                        />
-                                    ):(
-                                        <img
-                                            alt="userProfileImage" 
-                                            className="chat-profile-image" 
-                                            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-                                            style={{backgroundColor: 'white'}}
-                                        />
-                                    )}
-                                    <h3 className="chat-profile-name">{chat.first_name.charAt(0).toUpperCase() + chat.first_name.slice(1)}</h3>
+                                    <div className="chat-list-picture-name">
+                                        {chat.user_image !== "" ? (
+                                            <img 
+                                                alt="userProfileImage"
+                                                className="chat-profile-image"
+                                                src={chat.user_image} 
+                                                style={{backgroundColor: 'white'}}
+                                            />
+                                        ):(
+                                            <img
+                                                alt="userProfileImage" 
+                                                className="chat-profile-image" 
+                                                src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                                                style={{backgroundColor: 'white'}}
+                                            />
+                                        )}
+                                        <h3 className="chat-profile-name">{chat.user_id.charAt(0).toUpperCase() + chat.user_id.slice(1)}</h3>
+                                    </div>
+                                    <div className="chat-list-unread-message">
+                                        {numberOfUnreadMessage > 0 ? (
+                                            <div className="chat-unread-message">
+                                                {numberOfUnreadMessage}
+                                            </div>
+                                        ):(
+                                            <div></div>
+                                        )}
+                                    </div>
                                 </div>
                             )
                         })}
@@ -115,7 +187,8 @@ class ChatRoomList extends React.Component<
 }
 
 const mapStateToProps = (state: StateProps) => ({
-    selectedChatRoom: state.selectedChatRoom
+    selectedChatRoom: state.selectedChatRoom,
+    isMobileAndChatClicked: state.isMobileAndChatClicked,
 })
 
 const matchDispatchToProps = (dispatch: any) => ({

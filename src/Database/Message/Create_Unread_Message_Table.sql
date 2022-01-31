@@ -1,0 +1,7 @@
+-- CREATE TABLE Unread_Messages (
+-- 	Unread_Message_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+--     Recipient VARCHAR(50) NOT NULL,
+-- 	Chat_id VARCHAR(50) NOT NULL,
+--     Sender VARCHAR(50) NOT NULL,
+--     Message_text VARCHAR(2000) NOT NULL
+-- );

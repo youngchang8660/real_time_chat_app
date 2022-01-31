@@ -503,6 +503,11 @@ and (orientation: landscape) {
   color: white;
 }
 
+.chat-list-picture-name {
+  display: flex;
+  width: 80%;
+}
+
 .chat-profile-image {
   border-radius: 50%;
   width: 40px;
@@ -512,6 +517,26 @@ and (orientation: landscape) {
 .chat-profile-name {
   font-size: 19px;
   margin-left: 0.8em;
+}
+
+.chat-list-unread-message {
+  display: flex;
+  align-items: center;
+  width: 20%;
+}
+
+.chat-unread-message {
+  font-size: 14px;
+  border: 1px solid #ed4245;
+  background-color: #ed4245;
+  width: 25px;
+  height: 60%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 30%;
+  color: white;
+  font-weight: bold;
 }
 
 .mobile-chat-list-container-bottom {

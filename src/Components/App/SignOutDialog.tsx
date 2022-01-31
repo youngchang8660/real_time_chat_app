@@ -15,7 +15,7 @@ class SignOutDialog extends React.Component<
 >{
     handleClose = (action: boolean) => {
         if(action) {
-            this.props.props.history.push('/login');
+            this.props.props.history.push('/');
         }
         this.props.onRequestCloseModal(false);
     }

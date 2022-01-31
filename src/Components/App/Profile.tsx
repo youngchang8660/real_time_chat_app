@@ -5,6 +5,8 @@ import axios from "axios";
 import qs from 'qs';
 import Avatar from 'react-avatar';
 import MessageSnackbar from '../Reusable/MessageSnackbar';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEdit, faWindowClose } from "@fortawesome/free-solid-svg-icons";
 
 interface ProfileState {
     server: any,
@@ -17,6 +19,7 @@ interface ProfileState {
     snackbarMessage: any,
     isSnackbarOpen: boolean,
     status: number,
+    isEditMode: boolean
 }
 
 class Profile extends React.Component<
@@ -36,6 +39,7 @@ class Profile extends React.Component<
             snackbarMessage: "",
             isSnackbarOpen: false,
             status: 0,
+            isEditMode: false
         }
     }
 
@@ -80,6 +84,16 @@ class Profile extends React.Component<
 
     onClickSelectImage = () => {
         document.getElementById('upload-button')?.click();
+    }
+
+    preventOnclick = () => {
+        return
+    }
+
+    onClickEditProfile = () => {
+        this.setState({
+            isEditMode: !this.state.isEditMode
+        })
     }
 
     handleChange = (event: any) => {
@@ -162,18 +176,37 @@ class Profile extends React.Component<
     }
 
     render() {
-        let { firstName, lastName, userID, email, imgDisplay } = this.state;
+        let { firstName, lastName, userID, email, imgDisplay, isEditMode } = this.state;
         return (
             <div className="container" style={{color: 'black'}}>
                 <form className="mt-3">
                     <div 
                         style={{fontSize: '26px', marginBottom: '30px', display: 'flex', justifyContent: 'center', color: 'white', fontWeight: 700}}
                     >
-                        Edit Profile
+                        <span>
+                            {isEditMode ? "Edit Profile" : "My Profile"}
+                        </span>
+                        <div style={{marginLeft: '2rem'}}>
+                            {isEditMode ? (
+                                <FontAwesomeIcon
+                                    onClick={this.onClickEditProfile}
+                                    style={{cursor: 'pointer'}} 
+                                    icon={faWindowClose}
+                                />
+                            ):(
+                                <FontAwesomeIcon
+                                    onClick={this.onClickEditProfile}
+                                    style={{cursor: 'pointer'}} 
+                                    icon={faEdit}
+                                />
+                            )}
+                        </div>
                     </div>
                     <div style={{display: 'flex', justifyContent: 'center'}}>
                         {imgDisplay !== "" ? (
-                            <div onClick={this.onClickSelectImage} style={{width: '150px', height: '150px', cursor: 'pointer'}}>
+                            <div onClick={isEditMode ? this.onClickSelectImage : this.preventOnclick} 
+                                style={isEditMode ? {width: '150px', height: '150px', cursor: 'pointer'} : {width: '150px', height: '150px'}}
+                            >
                                 <img 
                                     alt="userProfileImage" 
                                     className="profile-image" 
@@ -190,7 +223,9 @@ class Profile extends React.Component<
                                 /> 
                             </div>
                         ):(
-                            <div onClick={this.onClickSelectImage} style={{width: '150px', height: '130px', cursor: 'pointer'}}>
+                            <div onClick={isEditMode ? this.onClickSelectImage : this.preventOnclick} 
+                                style={isEditMode ? {width: '150px', height: '130px', cursor: 'pointer'} : {width: '150px', height: '130px'}}
+                            >
                                 <Avatar name={`${firstName} ${lastName}`} size="130" className="profile-image"/>
                                 <input 
                                     type="file"
@@ -204,43 +239,75 @@ class Profile extends React.Component<
                             </div>
                     )}
                     </div>
-                    <div className="row d-flex flex-wrap justify-content-center mt-3" style={{fontSize: '16px'}}>
-                        <div className="col-12 col-sm-4 col-md-4 col-lg-3 col-xl-3 d-flex flex-column">
-                            <label className="mb-2" style={{color: 'white', fontWeight: 700}}>First Name</label>
-                            <input 
-                                defaultValue={firstName.charAt(0).toUpperCase() + firstName.slice(1)} 
-                                required id="firstName" 
-                                style={{height: '40px'}}
-                                onChange={(e) => {this.onChangeHandler(e, 'FirstName')}}
-                            />
+                    {isEditMode ? (
+                        <div className="row d-flex flex-wrap justify-content-center mt-3" style={{fontSize: '16px'}}>
+                            <div className="col-12 col-sm-4 col-md-4 col-lg-3 col-xl-3 d-flex flex-column">
+                                <label className="mb-2" style={{color: 'white', fontWeight: 700}}>First Name</label>
+                                <input 
+                                    defaultValue={firstName.charAt(0).toUpperCase() + firstName.slice(1)} 
+                                    required id="firstName" 
+                                    style={{height: '40px'}}
+                                    onChange={(e) => {this.onChangeHandler(e, 'FirstName')}}
+                                />
+                            </div>
+                            <div className="col-12 col-sm-4 col-md-4 col-lg-3 col-xl-3 d-flex flex-column">
+                                <label className="mb-2" style={{color: 'white', fontWeight: 700}}>Last Name</label>
+                                <input 
+                                    defaultValue={lastName.charAt(0).toUpperCase() + lastName.slice(1)} 
+                                    required id="lastName" 
+                                    style={{height: '40px'}}
+                                    onChange={(e) => {this.onChangeHandler(e, 'LastName')}}
+                                />
+                            </div>
                         </div>
-                        <div className="col-12 col-sm-4 col-md-4 col-lg-3 col-xl-3 d-flex flex-column">
-                            <label className="mb-2" style={{color: 'white', fontWeight: 700}}>Last Name</label>
-                            <input 
-                                defaultValue={lastName.charAt(0).toUpperCase() + lastName.slice(1)} 
-                                required id="lastName" 
-                                style={{height: '40px'}}
-                                onChange={(e) => {this.onChangeHandler(e, 'LastName')}}
-                            />
+                    ):(
+                        <div 
+                            className="d-flex flex-wrap justify-content-center mt-3" 
+                            style={{fontSize: '18px', color: 'white', fontWeight: 'bold'}}
+                        >
+                            <span>
+                                {firstName.charAt(0).toUpperCase() + firstName.slice(1) + ' ' + lastName.charAt(0).toUpperCase() + lastName.slice(1)}
+                            </span>
                         </div>
-                    </div>
-                    <div className="row d-flex flex-wrap justify-content-center mt-3" style={{fontSize: '16px'}}>
-                        <div className="col-12 col-sm-8 col-md-8 col-lg-6 col-xl-6 d-flex flex-column">
-                            <label className="mb-2" style={{color: 'white', fontWeight: 700}}>Email</label>
-                            <input defaultValue={email} disabled required id="email" style={{height: '40px'}}/>
+                    )}
+                    {isEditMode ? (
+                        <div className="row d-flex flex-wrap justify-content-center mt-3" style={{fontSize: '16px'}}>
+                            <div className="col-12 col-sm-8 col-md-8 col-lg-6 col-xl-6 d-flex flex-column">
+                                <label className="mb-2" style={{color: 'white', fontWeight: 700}}>Email</label>
+                                <input defaultValue={email} disabled required id="email" style={{height: '40px'}}/>
+                            </div>
                         </div>
-                    </div>
-                    <div className="row d-flex flex-wrap justify-content-center mt-3" style={{fontSize: '16px'}}>
-                        <div className="col-12 col-sm-8 col-md-8 col-lg-6 col-xl-6 d-flex flex-column">
-                            <label className="mb-2" style={{color: 'white', fontWeight: 700}}>User ID</label>
-                            <input defaultValue={userID} disabled id="userID" style={{height: '40px'}}/>
+                    ):(
+                        <div 
+                            className="d-flex flex-wrap justify-content-center mt-3" 
+                            style={{fontSize: '20px', color: 'white', fontWeight: 'bold'}}>
+                            <span>{email}</span>
                         </div>
-                    </div>
-                    <div className="row d-flex justify-content-center mt-3">
-                        <div className="col-12 col-sm-8 col-md-8 col-lg-6 col-xl-6">
-                            <Button onClick={this.onSubmit} variant="contained">SAVE</Button>
+                    )}
+                    {isEditMode ? (
+                        <div className="row d-flex flex-wrap justify-content-center mt-3" style={{fontSize: '16px'}}>
+                            <div className="col-12 col-sm-8 col-md-8 col-lg-6 col-xl-6 d-flex flex-column">
+                                <label className="mb-2" style={{color: 'white', fontWeight: 700}}>User ID</label>
+                                <input defaultValue={userID} disabled id="userID" style={{height: '40px'}}/>
+                            </div>
                         </div>
-                    </div>
+                    ):(
+                        <div
+                            className="d-flex flex-wrap justify-content-center mt-3"
+                            style={{fontSize: '20px', color: 'white', fontWeight: 'bold'}}
+                        >
+                            User ID: <span style={{marginLeft: '5px'}}>{userID}</span>
+                        </div>
+                    )}
+                    {isEditMode ? (
+                        <div className="row d-flex justify-content-center mt-3">
+                            <div className="col-12 col-sm-8 col-md-8 col-lg-6 col-xl-6">
+                                <Button onClick={this.onSubmit} variant="contained">SAVE</Button>
+                            </div>
+                        </div>
+                    ):(
+                        <div></div>
+                    )}
                 </form>
                 <MessageSnackbar 
                     autoHideDuration={6000}

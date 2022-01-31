@@ -35,7 +35,21 @@ class Login extends React.Component<
         localStorage.removeItem('last_name');
     }
 
-    clickLogin = () => {
+    onKeyDownEnter = (e: any) => {
+        if(e.keyCode === 13) {
+            if(this.state.password.length > 0 && this.state.userID.length > 0) {
+                this.onClickEventLogin();
+            } else {
+                this.setState({
+                    snackbarMessage: "Enter all fields",
+                    isSnackbarOpen: true,
+                    status: 500,
+                })
+            }
+        }
+    }
+
+    onClickEventLogin = () => {
         let { userID, password } = this.state;
         let url = ('http://localhost:5032/api/login');
         let data = {
@@ -96,7 +110,8 @@ class Login extends React.Component<
                                     border: 'none',
                                     height: '50px',
                                     margin: 'none',
-                                    backgroundColor: '#202225'
+                                    backgroundColor: '#202225',
+                                    paddingLeft: '5px'
                                 }
                             }}
                         />
@@ -115,9 +130,11 @@ class Login extends React.Component<
                                     border: 'none',
                                     height: '50px',
                                     margin: 'none',
-                                    backgroundColor: '#202225'
+                                    backgroundColor: '#202225',
+                                    paddingLeft: '5px'
                                 }
                             }}
+                            onKeyDown={(e: any) => {this.onKeyDownEnter(e)}}
                         />
                     </div>
                     <div className="mt-5">
@@ -125,7 +142,8 @@ class Login extends React.Component<
                             className="signInButton" 
                             variant="outlined" 
                             style={{fontSize: '16px', fontWeight: 'bold', color: 'white', backgroundColor: '#202225', border: 'none' }} 
-                            onClick={this.clickLogin}
+                            onClick={this.onClickEventLogin}
+                            type="submit"
                         >
                             Log In
                         </Button>
