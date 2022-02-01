@@ -60,10 +60,6 @@ class ChatRoomList extends React.Component<
     componentDidUpdate() {
         if(this.props.chatsData.length > 0 && this.props.unReadMessageArray.length !== this.state.unReadMessageArray.length) {
             let unReadMessageByUsers: any = [];
-            // this.props.chatsData.map((chat: any) => {
-            //     let obj = { userId: chat.user_id, num: 0 };
-            //     unReadMessageByUsers.push(obj);
-            // })
             this.props.chatsData.forEach((chat: any) => {
                 let obj = { userId: chat.user_id, num: 0 };
                 return unReadMessageByUsers.push(obj);

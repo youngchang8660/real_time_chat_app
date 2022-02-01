@@ -138,6 +138,7 @@ class Chat extends React.Component<
                         }
                         if(!this.props.isMobileAndChatClicked) {
                             this.props.selectChatRoom(this.state.myChatsArray[0]);
+                            this.props.history.push(`/chatApp/chat/${this.state.myChatsArray[0].chat_id}`);
                         }
                         this.getMessages();
                     })
