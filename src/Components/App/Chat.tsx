@@ -66,6 +66,7 @@ class Chat extends React.Component<
         this.getAllChats();
         this.getUnreadMessage();
         this.detectWindowSizeChange();
+        this.saveUnreadMessage();
         window.addEventListener("resize", this.detectWindowSizeChange);
     }
 
@@ -254,9 +255,32 @@ class Chat extends React.Component<
             this.fetchChatMessages(selectedChatRoomID)
             this.setState({
                 textMessage: ""
+            }, () => {
+                socket.emit("getOnlineUsers", this.props.selectedChatRoom.chat_id);
             })
         }).catch(err => {
             console.log(err.message)
+        })
+    }
+
+    // insert into unRead Message table if recipient is offline
+    saveUnreadMessage = () => {
+        socket.on("roomSize", (size) => {
+            if(size === 1) {
+                let requestUrl = `${this.state.server}/api/saveUnreadMessage`;
+                let requestData = {
+                    recipient: this.props.selectedChatRoom.user_id,
+                    chatID: this.props.selectedChatRoom.chat_id,
+                    sender: this.state.userID,
+                    messageText: ""
+                };
+                axios.post(requestUrl, requestData)
+                    .then(() => {
+                        this.getUnreadMessage();
+                    }).catch(err => {
+                        console.log(err.message)
+                    })
+            }
         })
     }
 

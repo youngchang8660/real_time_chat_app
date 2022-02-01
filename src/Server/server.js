@@ -22,6 +22,11 @@ io.on("connection", (socket) => {
         socket.join(room);
     })
 
+    socket.on("getOnlineUsers", (roomId) => {
+        let number_of_connected_clients_in_the_room = io.sockets.adapter.rooms.get(roomId).size;
+        io.to(roomId).emit("roomSize", number_of_connected_clients_in_the_room);
+    })
+
     socket.on("send message", (data) => {
         const { chatID } = data;
         io.to(chatID).emit('get message', data);
