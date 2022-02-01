@@ -472,6 +472,7 @@ and (orientation: landscape) {
   overflow-y: scroll;
   overflow-x: visible;
   margin-top: 50px;
+  margin-bottom: 50px;
 }
 
 .chat-list-container-middle {
@@ -544,7 +545,7 @@ and (orientation: landscape) {
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 100px;
+  height: 80px;
   background-color: #2a2b2f;
   color: white;
   text-align: center;
@@ -561,6 +562,7 @@ and (orientation: landscape) {
 }
 
 .chat-my-profile-image {
+  margin-top: 5px;
   border-radius: 50%;
   width: 50px;
   height: 50px;
@@ -569,7 +571,7 @@ and (orientation: landscape) {
 .chat-my-profile-id {
   font-size: 18px;
   font-weight: bold;
-  margin-top: 10px;
+  margin-top: 5px;
 }
 
 @media only screen

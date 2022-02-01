@@ -8,6 +8,8 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import qs from 'qs';
+import { connect } from 'react-redux';
+import { selectChatRoom } from '../../redux/actions';
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -20,6 +22,16 @@ const style = {
     boxShadow: 24,
     p: 4,
 };
+
+interface StateProps {
+    selectedChatRoom: any,
+    isMobileAndChatClicked: boolean
+}
+
+interface DispatchProps {
+    selectChatRoom: (chat: any) => void,
+    toggleMobileAndChatSelected: (isToggle: boolean) => void
+}
 
 interface FriendsDataInterface {
     first_name: string,
@@ -62,11 +74,13 @@ interface FriendsListState {
     messageText: string,
 }
 
+type Props = RouteComponentProps & StateProps & DispatchProps
+
 class FriendsList extends React.Component<
-    RouteComponentProps,
+    Props,
     FriendsListState
 >{
-    constructor(props: RouteComponentProps) {
+    constructor(props: Props) {
         super(props);
         this.state = {
             server: 'http://localhost:5032',
@@ -154,8 +168,8 @@ class FriendsList extends React.Component<
         axios.get(`${server}/api/checkChatExistence/${userOne}/${userTwo}`)
             .then((res: any) => {
                 if(res.data.length > 0) {
-                    let chatID = res.data[0]['chat_id'];
-                    this.props.history.push(`/chatApp/chat/${chatID}`);
+                    this.props.selectChatRoom(res.data[0]);
+                    this.props.history.push('/chatApp/chat');
                 } else {
                     this.setState({
                         isStartConversationModalOpen: true,
@@ -361,7 +375,6 @@ class FriendsList extends React.Component<
                                     <div style={{display: 'flex'}}>
                                         <div 
                                             className="friend-chat-icon-container"
-                                            // onClick={() => {this.onClickStartConversation(user)}}
                                             onClick={() => this.onClickChatIcon(user)}
                                         >
                                             <TextsmsIcon />
@@ -477,4 +490,16 @@ class FriendsList extends React.Component<
     }
 }
 
-export default FriendsList;
+function mapStateToProps(state: any) {
+    return {
+        selectedChatRoom: state.selectedChatRoom,
+    }
+}
+
+function matchDispatchToProps(dispatch: any) {
+    return {
+        selectChatRoom: (chat: any) => dispatch(selectChatRoom(chat)),
+    }
+}
+
+export default connect(mapStateToProps, matchDispatchToProps)(FriendsList);

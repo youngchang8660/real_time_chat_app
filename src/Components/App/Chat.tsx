@@ -137,8 +137,26 @@ class Chat extends React.Component<
                             this.fetchChatMessages(this.state.joinedChatRooms[i]);
                         }
                         if(!this.props.isMobileAndChatClicked) {
-                            this.props.selectChatRoom(this.state.myChatsArray[0]);
-                            this.props.history.push(`/chatApp/chat/${this.state.myChatsArray[0].chat_id}`);
+                            if(Object.keys(this.props.selectedChatRoom).length > 0) {
+                                this.state.myChatsArray.forEach((chat: any) => {
+                                    if(chat.chat_id === this.props.selectedChatRoom.chat_id) {
+                                        this.props.selectChatRoom(chat);
+                                        return this.props.history.push(`/chatApp/chat/${chat.chat_id}`);
+                                    }
+                                })
+                            } else {
+                                this.props.selectChatRoom(this.state.myChatsArray[0]);
+                                this.props.history.push(`/chatApp/chat/${this.state.myChatsArray[0].chat_id}`);
+                            }
+                        } else {
+                            if(Object.keys(this.props.selectedChatRoom).length > 0) {
+                                this.state.myChatsArray.forEach((chat: any) => {
+                                    if(chat.chat_id === this.props.selectedChatRoom.chat_id) {
+                                        this.props.selectChatRoom(chat);
+                                        return this.props.history.push(`/chatApp/chat/${chat.chat_id}`);
+                                    }
+                                })
+                            }
                         }
                         this.getMessages();
                     })
