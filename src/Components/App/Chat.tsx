@@ -227,9 +227,15 @@ class Chat extends React.Component<
     }
 
     onChangeTextMessage = (e: any) => {
-        this.setState({
-            textMessage: e.currentTarget.value
-        })
+        if(Object.keys(e).length > 0) {
+            this.setState({
+                textMessage: e.currentTarget.value
+            })
+        } else {
+            this.setState({
+                textMessage: ""
+            })
+        }
     }
 
     sendMessage = (selectedChatRoomID: string, messageText: string) => {
@@ -281,6 +287,7 @@ class Chat extends React.Component<
                         userID={userID}
                         history={this.props.history}
                         getUnreadMessage={this.getUnreadMessage}
+                        onChangeTextMessage={this.onChangeTextMessage}
                         unReadMessageArray={this.state.unReadMessageArray}
                     />
                 ):(

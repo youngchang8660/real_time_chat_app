@@ -19,6 +19,7 @@ interface ChatProps {
     userID: string,
     history: any,
     getUnreadMessage: () => void,
+    onChangeTextMessage: (textMessage: string) => void,
     unReadMessageArray: Array<any>,
 }
 
@@ -95,6 +96,7 @@ class ChatRoomList extends React.Component<
         this.props.selectChatRoom(chat);
         this.props.history.push(`/chatApp/chat/${chatID}`);
         this.props.getUnreadMessage();
+        this.props.onChangeTextMessage("");
     }
 
     render() {
