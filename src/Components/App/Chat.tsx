@@ -56,6 +56,7 @@ class Chat extends React.Component<
     }
 
     componentDidMount = () => {
+        socket.connect();
         if(this.state.userID === null || this.state.userID === undefined) {
             return this.props.history.push('/')
         }
@@ -66,8 +67,8 @@ class Chat extends React.Component<
         this.getUnreadMessage();
         this.detectWindowSizeChange();
         this.saveUnreadMessage();
-        this.getMessages();
         this.getAllChats();
+        this.getMessages();
         setInterval(() => {
             this.getAllChats();
         }, 3000)
@@ -189,31 +190,33 @@ class Chat extends React.Component<
     getMessages = () => {
         socket.on("get message", data => {
             if(data.sender !== this.state.userID) {
-                if(this.state.selectedRoomMessages[0].Chat_id === data.chatID) {
-                    this.setState({
-                        selectedRoomMessages: [...this.state.selectedRoomMessages, {
-                            Chat_id: data.chatID,
-                            Message_Date_Time: new Date(),
-                            Message_text: data.messageText, 
-                            Sender: data.sender 
-                        }]
-                    }, () => {
-                        this.scrollToBottom();
-                    })
-                } else {
-                    let requestUrl = `${this.state.server}/api/saveUnreadMessage`;
-                    let requestData = {
-                        recipient: this.state.userID,
-                        chatID: data.chatID,
-                        sender: data.sender,
-                        messageText: data.messageText
-                    };
-                    axios.post(requestUrl, requestData)
-                        .then(() => {
-                            this.getUnreadMessage();
-                        }).catch(err => {
-                            console.log(err.message)
+                if(this.state.selectedRoomMessages.length > 0) {
+                    if(this.state.selectedRoomMessages[0].Chat_id === data.chatID) {
+                        this.setState({
+                            selectedRoomMessages: [...this.state.selectedRoomMessages, {
+                                Chat_id: data.chatID,
+                                Message_Date_Time: new Date(),
+                                Message_text: data.messageText, 
+                                Sender: data.sender 
+                            }]
+                        }, () => {
+                            this.scrollToBottom();
                         })
+                    } else {
+                        let requestUrl = `${this.state.server}/api/saveUnreadMessage`;
+                        let requestData = {
+                            recipient: this.state.userID,
+                            chatID: data.chatID,
+                            sender: data.sender,
+                            messageText: data.messageText
+                        };
+                        axios.post(requestUrl, requestData)
+                            .then(() => {
+                                this.getUnreadMessage();
+                            }).catch(err => {
+                                console.log(err.message)
+                            })
+                    }
                 }
             }
         })
@@ -272,18 +275,20 @@ class Chat extends React.Component<
         socket.on("roomSize", (size) => {
             if(size === 1) {
                 let requestUrl = `${this.state.server}/api/saveUnreadMessage`;
-                let requestData = {
-                    recipient: this.props.selectedChatRoom.user_id,
-                    chatID: this.props.selectedChatRoom.chat_id,
-                    sender: this.state.userID,
-                    messageText: ""
-                };
-                axios.post(requestUrl, requestData)
-                    .then(() => {
-                        this.getUnreadMessage();
-                    }).catch(err => {
-                        console.log(err.message)
-                    })
+                if(Object.keys(this.props.selectedChatRoom).length > 0) {
+                    let requestData = {
+                        recipient: this.props.selectedChatRoom.user_id,
+                        chatID: this.props.selectedChatRoom.chat_id,
+                        sender: this.state.userID,
+                        messageText: ""
+                    };
+                    axios.post(requestUrl, requestData)
+                        .then(() => {
+                            this.getUnreadMessage();
+                        }).catch(err => {
+                            console.log(err.message)
+                        })
+                }
             }
         })
     }

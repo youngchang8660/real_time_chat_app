@@ -119,7 +119,8 @@ class ChatRoom extends React.Component<
 
     onClickHandleSubmitMessage = (e: any, action: any, message: any) => {
         let regExp = /[a-zA-Z]/g;
-        if(e.keyCode === 13 && regExp.test(e.currentTarget.value)) {
+        let spChars = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+        if(e.keyCode === 13 && (regExp.test(e.currentTarget.value) || spChars.test(e.currentTarget.value))) {
             if(action === 'new') {
                 this.props.sendMessage(this.props.selectedChatRoom.chat_id, message);
             } else {

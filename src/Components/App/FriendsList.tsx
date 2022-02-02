@@ -324,7 +324,6 @@ class FriendsList extends React.Component<
             sender: this.state.userID,
             messageText: this.state.messageText
         };
-        console.log(requestData)
         axios.post(requestUrl, requestData)
             .then(() => {
                 this.props.history.push('/chatApp/chat');
