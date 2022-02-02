@@ -310,8 +310,8 @@ class FriendsList extends React.Component<
         }
         axios(options)
             .then((res: any) => {
-                let chatID = res.data[0]['chat_id'];
-                this.props.history.push(`/chatApp/chat/${chatID}`);
+                this.props.history.push('/chatApp/chat');
+                this.props.selectChatRoom(res.data[0])
             }).catch(err => {
                 console.log(err.message)
             })
