@@ -26,8 +26,11 @@ class App extends React.Component<any, {
     }
   }
 
-  componentDidUpdate = () => {
-    console.log(localStorage.getItem('user_id'))
+  componentDidMount = () => {
+    let dbConfig = require('../src/Server/dbconfig').server;
+    console.log(dbConfig.server)
+    let server = dbConfig.server + ':' + dbConfig.port;
+    localStorage.setItem('servername', server);
   }
 
   render() {

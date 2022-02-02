@@ -20,8 +20,8 @@ interface DispatchProps {
 }
 
 interface ChatStateInterface {
-    windowWidth: number,
     server: string,
+    windowWidth: number,
     userID: any,
     userInfo: Array<any>,
     myChatsArray: Array<any>,
@@ -41,9 +41,10 @@ class Chat extends React.Component<
     constructor(props: Props) {
         super(props);
         let windowWidth = document.body.clientWidth;
+        let server: any = (localStorage.getItem("servername") === null || localStorage.getItem("servername") === undefined) ? "" : localStorage.getItem("servername");
         this.state = {
             windowWidth: windowWidth,
-            server: 'http://localhost:5032',
+            server: server,
             userID: localStorage.getItem('user_id'),
             userInfo: [],
             myChatsArray: [],

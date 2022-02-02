@@ -2,15 +2,15 @@ import React from 'react';
 import { RouteComponentProps } from "react-router-dom";
 import { TextField, Button } from '@material-ui/core';
 import axios from 'axios';
-import qs from 'qs';
 import MessageSnackbar from '../Reusable/MessageSnackbar';
 
 interface LoginState {
+    server: string,
     userID: string,
     password: string,
     snackbarMessage: string,
     isSnackbarOpen: boolean,
-    status: number
+    status: number,
 }
 
 class Login extends React.Component<
@@ -18,8 +18,10 @@ class Login extends React.Component<
     LoginState
 >{
     constructor(props: RouteComponentProps) {
-        super(props)
+        super(props);
+        let server: any = (localStorage.getItem("servername") === null || localStorage.getItem("servername") === undefined) ? "" : localStorage.getItem("servername");
         this.state = {
+            server: server,
             userID: "",
             password: "",
             snackbarMessage: "",
@@ -51,18 +53,12 @@ class Login extends React.Component<
 
     onClickEventLogin = () => {
         let { userID, password } = this.state;
-        let url = ('http://localhost:5032/api/login');
+        let url = (`${this.state.server}/api/login`);
         let data = {
             'user_id': userID,
             'password': password
         };
-        const options: any = {
-            method: 'POST',
-            headers: { 'content-type': 'application/x-www-form-urlencoded' },
-            data: qs.stringify(data),
-            url,
-        };
-        axios(options)
+        axios.post(url, data)
             .then(res => {
                 if(res.status === 200) {
                     let data: any = res.data;

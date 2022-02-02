@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit, faWindowClose } from "@fortawesome/free-solid-svg-icons";
 
 interface ProfileState {
-    server: any,
+    server: string,
     userID: any,
     firstName: any,
     lastName: any,
@@ -28,8 +28,9 @@ class Profile extends React.Component<
 >{
     constructor(props: RouteComponentProps) {
         super(props);
+        let server: any = (localStorage.getItem("servername") === null || localStorage.getItem("servername") === undefined) ? "" : localStorage.getItem("servername");
         this.state = {
-            server: 'http://localhost:5032',
+            server: server,
             userID: localStorage.getItem('user_id'),
             firstName: '',
             lastName: '',

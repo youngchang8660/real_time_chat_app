@@ -38,10 +38,11 @@ class ChatRoomList extends React.Component<
 > {
     constructor(props: Props) {
         super(props);
+        let server: any = (localStorage.getItem("servername") === null || localStorage.getItem("servername") === undefined) ? "" : localStorage.getItem("servername");
         this.state = {
             unReadMessageArray: [],
             unReadMessageByUsers: [],
-            server: 'http://localhost:5032',
+            server: server,
             userID: localStorage.getItem('user_id'),
         }
     }

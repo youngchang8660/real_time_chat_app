@@ -48,8 +48,9 @@ class ChatRoom extends React.Component<
 >{
     constructor(props: Props) {
         super(props);
+        let server: any = (localStorage.getItem("servername") === null || localStorage.getItem("servername") === undefined) ? "" : localStorage.getItem("servername");
         this.state = {
-            server: 'http://localhost:5032',
+            server: server,
             hoveredSentMessage: {},
             isEditMessageOpen: false,
             editMessageInfo: {},

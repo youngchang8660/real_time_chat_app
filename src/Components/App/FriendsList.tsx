@@ -82,8 +82,9 @@ class FriendsList extends React.Component<
 >{
     constructor(props: Props) {
         super(props);
+        let server: any = (localStorage.getItem("servername") === null || localStorage.getItem("servername") === undefined) ? "" : localStorage.getItem("servername");
         this.state = {
-            server: 'http://localhost:5032',
+            server: server,
             currentTab: 'All',
             friendUserID: '',
             userID: localStorage.getItem('user_id'),
@@ -259,7 +260,7 @@ class FriendsList extends React.Component<
             status: 0
         }
         axios.post(`${server}/api/sendFriendRequest`, insertData)
-            .then(res => {
+            .then(() => {
                 this.onClickFriendSearchByID();
             }).catch(err => {
                 if(err.response.status === 500) {
