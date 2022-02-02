@@ -63,14 +63,18 @@ class Chat extends React.Component<
             this.props.history.push("/chatApp/chat")
         }
         this.getMyInfo();
-        this.getAllChats();
         this.getUnreadMessage();
         this.detectWindowSizeChange();
         this.saveUnreadMessage();
+        this.getMessages();
+        this.getAllChats();
+        setInterval(() => {
+            this.getAllChats();
+        }, 3000)
         window.addEventListener("resize", this.detectWindowSizeChange);
     }
 
-    componentDidUpdate(prevProps: any) {
+    componentDidUpdate(prevProps: any, prevState: any) {
         if(prevProps.selectedChatRoom.chat_id !== this.props.selectedChatRoom.chat_id) {
             this.fetchChatMessages(this.props.selectedChatRoom.chat_id);
         }
@@ -134,7 +138,7 @@ class Chat extends React.Component<
                         joinedChatRooms
                     }, () => {
                         for(let i = 0; i < this.state.joinedChatRooms.length; i++) {
-                            socket.emit("join", this.state.joinedChatRooms[i])
+                            socket.emit("join", this.state.joinedChatRooms[i]);
                             this.fetchChatMessages(this.state.joinedChatRooms[i]);
                         }
                         if(!this.props.isMobileAndChatClicked) {
@@ -159,7 +163,7 @@ class Chat extends React.Component<
                                 })
                             }
                         }
-                        this.getMessages();
+                        this.getUnreadMessage();
                     })
                 }
             })

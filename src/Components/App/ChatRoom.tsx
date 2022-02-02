@@ -184,7 +184,7 @@ class ChatRoom extends React.Component<
                                     let messageDate = moment(new Date(message.Message_Date_Time)).format('YYYY-MM-DD');
                                     let messageDateTime = moment(new Date(message.Message_Date_Time)).format('YYYY-MM-DD hh:mm a');
                                     let messageTime = moment(new Date(message.Message_Date_Time)).format('hh:mm a');
-                                    if(message.Sender === userID) {
+                                    if(message.Sender === userID && userInfo.length > 0) {
                                         let userImage = userInfo[0]['user_image'] !== "" ? userInfo[0]['user_image'] : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
                                         return (
                                             <div key={Math.random()}>

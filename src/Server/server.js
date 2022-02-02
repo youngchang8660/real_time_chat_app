@@ -15,7 +15,6 @@ const io = socketIo(server, {
 });
 
 io.on("connection", (socket) => {
-    const { id } = socket.client;
 
     socket.on("join", (room) => {
         console.log(`Socket ${socket.id} joining ${room}`);
@@ -426,6 +425,7 @@ app.delete('/api/deleteMessage', async (req, res) => {
 
 // save unread message
 app.post('/api/saveUnreadMessage', async (req, res) => {
+    console.log(req.body)
     let { recipient, chatID, sender, messageText } = req.body;
     try {
         let query = "CALL Save_Unread_Messages (?, ?, ?, ?)";

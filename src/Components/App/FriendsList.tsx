@@ -310,8 +310,25 @@ class FriendsList extends React.Component<
         }
         axios(options)
             .then((res: any) => {
+                this.saveUnreadMessage(res.data[0]);
+            }).catch(err => {
+                console.log(err.message)
+            })
+    }
+
+    saveUnreadMessage = (chatData: any) => {
+        let requestUrl = `${this.state.server}/api/saveUnreadMessage`;
+        let requestData = {
+            recipient: this.state.recipient,
+            chatID: chatData.chat_id,
+            sender: this.state.userID,
+            messageText: this.state.messageText
+        };
+        console.log(requestData)
+        axios.post(requestUrl, requestData)
+            .then(() => {
                 this.props.history.push('/chatApp/chat');
-                this.props.selectChatRoom(res.data[0])
+                this.props.selectChatRoom(chatData);
             }).catch(err => {
                 console.log(err.message)
             })
