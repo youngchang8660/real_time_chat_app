@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const cors = require('cors');
 const server = http.createServer(app);
+const path = require('path');
 
 app.use(express.static(__dirname + '../../build'))
 app.get('*', (req, res) => {
