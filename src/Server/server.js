@@ -7,8 +7,8 @@ const bcrypt = require("bcrypt");
 const cors = require('cors');
 const server = http.createServer(app);
 const path = require('path');
-app.get('*', (req, res)=>{
-    res.sendFile(path.join(__dirname, '../../build/index.html'));
+app.use('*', (req, res)=>{
+    res.sendFile(path.join(`__dirname/../../build/index.html`));
 });
 const socketIo = require("socket.io");
 const io = socketIo(server, {
