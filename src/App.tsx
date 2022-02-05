@@ -15,6 +15,7 @@ import Profile from './Components/App/Profile';
 import FriendsList from './Components/App/FriendsList';
 import { Redirect } from 'react-router-dom';
 import { CustomProvider } from 'rsuite';
+require('dotenv').config();
 
 class App extends React.Component<any, {
 
@@ -27,9 +28,17 @@ class App extends React.Component<any, {
   }
 
   componentDidMount = () => {
-    let dbConfig = require('../src/Server/dbconfig').server;
-    console.log(dbConfig.server)
-    let server = dbConfig.server + ':' + dbConfig.port;
+    // let dbConfig = require('../src/Server/dbconfig').server;
+    // console.log(dbConfig.server)
+    // let server = dbConfig.server + ':' + dbConfig.port;
+    // console.log(process.env)
+    const { APP_URL } = process.env;
+    let server: string = "";
+    if(APP_URL !== undefined) {
+      server = APP_URL;
+    } else {
+      server = "http://localhost:5032";
+    }
     localStorage.setItem('servername', server);
   }
 

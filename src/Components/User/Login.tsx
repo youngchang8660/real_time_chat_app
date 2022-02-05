@@ -53,7 +53,7 @@ class Login extends React.Component<
 
     onClickEventLogin = () => {
         let { userID, password } = this.state;
-        let url = (`${this.state.server}/api/login`);
+        let url = `${this.state.server}/api/login`;
         let data = {
             'user_id': userID,
             'password': password
