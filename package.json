@@ -61,7 +61,7 @@
     "web-vitals": "^1.1.2"
   },
   "scripts": {
-    "start": "react-scripts --openssl-legacy-provider start",
+    "start": "react-scripts --openssl-legacy-provider --max_old_space_size=8048 start",
     "server": "nodemon ./src/Server/server.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
