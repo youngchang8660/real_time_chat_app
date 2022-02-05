@@ -40,7 +40,7 @@ class App extends React.Component<any, {
     // } else {
     //   server = "http://localhost:5032";
     // }
-    let server = 'https://real-time-chat-app-32mmn.ondigitalocean.app';
+    let server = 'http://real-time-chat-app-32mmn.ondigitalocean.app';
     localStorage.setItem('servername', server);
   }
 
