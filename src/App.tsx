@@ -32,13 +32,15 @@ class App extends React.Component<any, {
     // console.log(dbConfig.server)
     // let server = dbConfig.server + ':' + dbConfig.port;
     // console.log(process.env)
-    const { APP_URL } = process.env;
-    let server: string = "";
-    if(APP_URL !== undefined) {
-      server = APP_URL;
-    } else {
-      server = "http://localhost:5032";
-    }
+    // const { APP_URL } = process.env;
+    // console.log(APP_URL)
+    // let server: string = "";
+    // if(APP_URL !== undefined) {
+    //   server = APP_URL;
+    // } else {
+    //   server = "http://localhost:5032";
+    // }
+    let server = 'https://real-time-chat-app-32mmn.ondigitalocean.app';
     localStorage.setItem('servername', server);
   }
 

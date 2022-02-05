@@ -51,6 +51,7 @@ app.use(bodyParser.json());
 
 require('dotenv').config();
 const { PORT, HOST, DATABASE, PASSWORD } = process.env;
+console.log(process.env)
 const port = PORT;
 const host = HOST;
 const db = DATABASE;
