@@ -2,7 +2,7 @@
   "name": "real-time-chat-app",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:5033",
+  "proxy": "https://real-time-chat-app-32mmn.ondigitalocean.app",
   "dependencies": {
     "@emotion/core": "^11.0.0",
     "@emotion/react": "^11.5.0",
@@ -91,7 +91,7 @@
     "@types/react-router-dom": "^5.3.1",
     "babel-core": "^6.26.3",
     "nodemon": "^2.0.13",
-    "redux": "^4.1.2",
+    "redux": "^4.1.2"
   },
   "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
   "keywords": [],
