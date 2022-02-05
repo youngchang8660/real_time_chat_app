@@ -39,7 +39,8 @@ class App extends React.Component<any, {
     // } else {
     //   server = "http://localhost:5032";
     // }
-    let server = 'http://localhost:5032';
+    // let server = 'http://localhost:5032';
+    let server = 'https://165.227.31.155:5032';
     localStorage.setItem('servername', server);
   }
 
