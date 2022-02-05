@@ -31,7 +31,6 @@ class App extends React.Component<any, {
     // let dbConfig = require('../src/Server/dbconfig').server;
     // console.log(dbConfig.server)
     // let server = dbConfig.server + ':' + dbConfig.port;
-    // console.log(process.env)
     // const { APP_URL } = process.env;
     // console.log(APP_URL)
     // let server: string = "";
@@ -40,7 +39,7 @@ class App extends React.Component<any, {
     // } else {
     //   server = "http://localhost:5032";
     // }
-    let server = 'http://real-time-chat-app-32mmn.ondigitalocean.app';
+    let server = 'https://real-time-chat-app-32mmn.ondigitalocean.app';
     localStorage.setItem('servername', server);
   }
 
