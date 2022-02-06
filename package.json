@@ -2,7 +2,7 @@
   "name": "real-time-chat-app",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://165.227.31.155:5032",
+  "proxy": "http://localhost:5032",
   "dependencies": {
     "@emotion/core": "^11.0.0",
     "@emotion/react": "^11.5.0",
@@ -61,7 +61,7 @@
     "web-vitals": "^1.1.2"
   },
   "scripts": {
-    "start": "react-scripts --openssl-legacy-provider --max_old_space_size=8048 start",
+    "start": "react-scripts start",
     "server": "nodemon ./src/Server/server.js",
     "build": "react-scripts build",
     "test": "react-scripts test",

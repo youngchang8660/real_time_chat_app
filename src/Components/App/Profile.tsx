@@ -9,7 +9,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit, faWindowClose } from "@fortawesome/free-solid-svg-icons";
 
 interface ProfileState {
-    server: string,
     userID: any,
     firstName: any,
     lastName: any,
@@ -28,9 +27,7 @@ class Profile extends React.Component<
 >{
     constructor(props: RouteComponentProps) {
         super(props);
-        let server: any = (localStorage.getItem("servername") === null || localStorage.getItem("servername") === undefined) ? "" : localStorage.getItem("servername");
         this.state = {
-            server: server,
             userID: localStorage.getItem('user_id'),
             firstName: '',
             lastName: '',
@@ -49,8 +46,8 @@ class Profile extends React.Component<
     }
 
     fetchUserInfo = () => {
-        let { server, userID } = this.state;
-        axios.get(`${server}/api/getUserInfo/${userID}`)
+        let { userID } = this.state;
+        axios.get(`/api/getUserInfo/${userID}`)
             .then((res: any) => {
                 this.setState({
                     firstName: res.data[0].first_name,
@@ -130,14 +127,14 @@ class Profile extends React.Component<
     }
 
     onSubmit = () => {
-        let { userID, firstName, lastName, imgContent, server } = this.state;
+        let { userID, firstName, lastName, imgContent } = this.state;
         let insertUserData = {
             userID,
             firstName,
             lastName,
             imgContent
         }
-        let url = `${server}/api/updateUser`;
+        let url = `/api/updateUser`;
         let options: any = {
             method: 'PUT',
             headers: { 'content-type': 'application/x-www-form-urlencoded' },

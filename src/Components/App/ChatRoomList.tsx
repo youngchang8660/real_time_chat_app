@@ -26,7 +26,6 @@ interface ChatProps {
 interface ChatRoomListStateInterface {
     unReadMessageArray: Array<any>,
     unReadMessageByUsers: Array<any>,
-    server: string,
     userID: any,
 }
 
@@ -38,11 +37,9 @@ class ChatRoomList extends React.Component<
 > {
     constructor(props: Props) {
         super(props);
-        let server: any = (localStorage.getItem("servername") === null || localStorage.getItem("servername") === undefined) ? "" : localStorage.getItem("servername");
         this.state = {
             unReadMessageArray: [],
             unReadMessageByUsers: [],
-            server: server,
             userID: localStorage.getItem('user_id'),
         }
     }
@@ -86,7 +83,7 @@ class ChatRoomList extends React.Component<
         for(let i = 0; i < this.state.unReadMessageArray.length; i++) {
             if(this.state.unReadMessageArray[i].Chat_id === chatID) {
                 let messageId = this.state.unReadMessageArray[i].Unread_Message_id;
-                axios.delete(`${this.state.server}/api/removeUnreadMessage/${messageId}`)
+                axios.delete(`/api/removeUnreadMessage/${messageId}`)
                     .then(() => {
                         
                     }).catch(err => {

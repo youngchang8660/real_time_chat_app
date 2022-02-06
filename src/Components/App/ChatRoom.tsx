@@ -34,7 +34,6 @@ interface PropsInterface {
 }
 
 interface ChatRoomStateInterface {
-    server: string,
     hoveredSentMessage: any,
     isEditMessageOpen: boolean,
     editMessageInfo: any,
@@ -48,9 +47,7 @@ class ChatRoom extends React.Component<
 >{
     constructor(props: Props) {
         super(props);
-        let server: any = (localStorage.getItem("servername") === null || localStorage.getItem("servername") === undefined) ? "" : localStorage.getItem("servername");
         this.state = {
-            server: server,
             hoveredSentMessage: {},
             isEditMessageOpen: false,
             editMessageInfo: {},
@@ -79,7 +76,6 @@ class ChatRoom extends React.Component<
     }
 
     editMessage = (message: any) => {
-        let { server } = this.state;
         let data = {
             chatID: message['Chat_id'],
             messageID: message['Message_id'],
@@ -87,7 +83,7 @@ class ChatRoom extends React.Component<
             messageText: message['Message_text']
         }
         socket.emit('send message', data);
-        let url = `${server}/api/editMessage`;
+        let url = '/api/editMessage';
         axios.put(url, {
             data
         }).then(() => {
@@ -101,14 +97,13 @@ class ChatRoom extends React.Component<
     }
 
     deleteMessage = (message: any) => {
-        let { server } = this.state;
         let data = {
             chatID: message['Chat_id'],
             messageID: message['Message_id'],
             sender: message['Sender']
         }
         socket.emit('send message', data);
-        let url = `${server}/api/deleteMessage`;
+        let url = '/api/deleteMessage';
         axios.delete(url, {
             data
         }).then(() => {

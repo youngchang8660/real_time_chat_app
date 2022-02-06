@@ -27,23 +27,6 @@ class App extends React.Component<any, {
     }
   }
 
-  componentDidMount = () => {
-    // let dbConfig = require('../src/Server/dbconfig').server;
-    // console.log(dbConfig.server)
-    // let server = dbConfig.server + ':' + dbConfig.port;
-    // const { APP_URL } = process.env;
-    // console.log(APP_URL)
-    // let server: string = "";
-    // if(APP_URL !== undefined) {
-    //   server = APP_URL;
-    // } else {
-    //   server = "http://localhost:5032";
-    // }
-    // let server = 'http://localhost:5032';
-    let server = 'https://165.227.31.155:5032';
-    localStorage.setItem('servername', server);
-  }
-
   render() {
     return (
       <div style={{backgroundColor: '#36393e'}}>

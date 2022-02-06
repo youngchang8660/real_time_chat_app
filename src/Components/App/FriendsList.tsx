@@ -62,7 +62,6 @@ interface SearchedUserDataInterface {
 }
 
 interface FriendsListState {
-    server: string,
     currentTab: string,
     friendUserID: string,
     userID: any,
@@ -82,9 +81,7 @@ class FriendsList extends React.Component<
 >{
     constructor(props: Props) {
         super(props);
-        let server: any = (localStorage.getItem("servername") === null || localStorage.getItem("servername") === undefined) ? "" : localStorage.getItem("servername");
         this.state = {
-            server: server,
             currentTab: 'All',
             friendUserID: '',
             userID: localStorage.getItem('user_id'),
@@ -142,9 +139,9 @@ class FriendsList extends React.Component<
     /*********************** All Friends Tab *******************/
 
     getAllMyFriends = () => {
-        let { server, userID } = this.state;
+        let { userID } = this.state;
         let friendsData: any = [];
-        axios.get(`${server}/api/getMyFriends/${userID}`)
+        axios.get(`/api/getMyFriends/${userID}`)
             .then(res => {
                 friendsData = res.data;
                 for(let i = 0; i < friendsData.length; i++) {
@@ -163,10 +160,10 @@ class FriendsList extends React.Component<
     }
 
     onClickChatIcon = (data: any) => {
-        let { server, userID } = this.state;
+        let { userID } = this.state;
         let userOne = userID;
         let userTwo = data.user_id;
-        axios.get(`${server}/api/checkChatExistence/${userOne}/${userTwo}`)
+        axios.get(`/api/checkChatExistence/${userOne}/${userTwo}`)
             .then((res: any) => {
                 if(res.data.length > 0) {
                     this.props.selectChatRoom(res.data[0]);
@@ -185,9 +182,9 @@ class FriendsList extends React.Component<
     /*********************** Pending Tab ***********************/
 
     getAllPendingRequests = () => {
-        let { server, userID } = this.state;
+        let { userID } = this.state;
         let pendingRequestsData: any = [];
-        axios.get(`${server}/api/getPendingRequests/${userID}`)
+        axios.get(`/api/getPendingRequests/${userID}`)
             .then((res: any) => {
                 pendingRequestsData = res.data.filter((d: any) => d.status === 0)
                 for(let i = 0; i < pendingRequestsData.length; i++) {
@@ -206,14 +203,13 @@ class FriendsList extends React.Component<
     }
 
     onClickAcceptOrReject = (data:any, action:any) => {
-        let { server } = this.state;
         let requestID = data.request_id;
         let status = action === 'Accept' ? 1 : 2;
         let insertData = {
             requestID,
             status
         };
-        axios.put(`${server}/api/acceptOrRejectRequest`, insertData)
+        axios.put(`/api/acceptOrRejectRequest`, insertData)
             .then(() => {
                 this.getAllPendingRequests();
             })
@@ -226,10 +222,10 @@ class FriendsList extends React.Component<
     }
 
     onClickFriendSearchByID = () => {
-        let { server, userID, friendUserID } = this.state;
+        let { userID, friendUserID } = this.state;
         let searchedUsersData: any = [];
         if(friendUserID.length > 0) {
-            axios.get(`${server}/api/getUserByID/${userID}/${friendUserID}`)
+            axios.get(`/api/getUserByID/${userID}/${friendUserID}`)
             .then(res => {
                 searchedUsersData = res.data;
                 for(let i = 0; i < searchedUsersData.length; i++) {
@@ -253,13 +249,13 @@ class FriendsList extends React.Component<
     }
 
     onClickSendRequest = (data: any) => {
-        let { server, userID } = this.state;
+        let { userID } = this.state;
         let insertData = {
             sender: userID,
             receiver: data.user_id,
             status: 0
         }
-        axios.post(`${server}/api/sendFriendRequest`, insertData)
+        axios.post(`/api/sendFriendRequest`, insertData)
             .then(() => {
                 this.onClickFriendSearchByID();
             }).catch(err => {
@@ -270,10 +266,9 @@ class FriendsList extends React.Component<
     }
 
     onClickCancelRequest = (data: any) => {
-        let { server } = this.state;
         let userID = this.state.userID;
         let friendID = data.user_id;
-        axios.delete(`${server}/api/cancelFriendRequest/${userID}/${friendID}`)
+        axios.delete(`/api/cancelFriendRequest/${userID}/${friendID}`)
             .then(res => {
                 this.onClickFriendSearchByID();
             }).catch(err => {
@@ -296,8 +291,8 @@ class FriendsList extends React.Component<
     }
 
     createNewChatRoom = () => {
-        let { server, userID, recipient, messageText } = this.state;
-        let url = (`${server}/api/createNewChat`);
+        let { userID, recipient, messageText } = this.state;
+        let url = '/api/createNewChat';
         let data = {
             'userOne': userID,
             'userTwo': recipient,
@@ -318,7 +313,7 @@ class FriendsList extends React.Component<
     }
 
     saveUnreadMessage = (chatData: any) => {
-        let requestUrl = `${this.state.server}/api/saveUnreadMessage`;
+        let requestUrl = '/api/saveUnreadMessage';
         let requestData = {
             recipient: this.state.recipient,
             chatID: chatData.chat_id,

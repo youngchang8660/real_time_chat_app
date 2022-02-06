@@ -5,7 +5,6 @@ import axios from 'axios';
 import MessageSnackbar from '../Reusable/MessageSnackbar';
 
 interface LoginState {
-    server: string,
     userID: string,
     password: string,
     snackbarMessage: string,
@@ -19,9 +18,7 @@ class Login extends React.Component<
 >{
     constructor(props: RouteComponentProps) {
         super(props);
-        let server: any = (localStorage.getItem("servername") === null || localStorage.getItem("servername") === undefined) ? "" : localStorage.getItem("servername");
         this.state = {
-            server: server,
             userID: "",
             password: "",
             snackbarMessage: "",
@@ -53,7 +50,7 @@ class Login extends React.Component<
 
     onClickEventLogin = () => {
         let { userID, password } = this.state;
-        let url = `${this.state.server}/api/login`;
+        let url = `/api/login`;
         let data = {
             'user_id': userID,
             'password': password

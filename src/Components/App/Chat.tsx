@@ -20,7 +20,6 @@ interface DispatchProps {
 }
 
 interface ChatStateInterface {
-    server: string,
     windowWidth: number,
     userID: any,
     userInfo: Array<any>,
@@ -41,10 +40,8 @@ class Chat extends React.Component<
     constructor(props: Props) {
         super(props);
         let windowWidth = document.body.clientWidth;
-        let server: any = (localStorage.getItem("servername") === null || localStorage.getItem("servername") === undefined) ? "" : localStorage.getItem("servername");
         this.state = {
             windowWidth: windowWidth,
-            server: server,
             userID: localStorage.getItem('user_id'),
             userInfo: [],
             myChatsArray: [],
@@ -101,7 +98,7 @@ class Chat extends React.Component<
 
     getMyInfo = () => {
         let userInfo: any = [];
-        axios.get(`${this.state.server}/api/getUserInfo/${this.state.userID}`)
+        axios.get(`/api/getUserInfo/${this.state.userID}`)
             .then((res: any) => {
                 userInfo = res.data;
                 for(let i = 0; i < userInfo.length; i++) {
@@ -120,10 +117,10 @@ class Chat extends React.Component<
     }
 
     getAllChats = () => {
-        let { server, userID } = this.state;
+        let { userID } = this.state;
         let myChatsArray:any = [];
         let joinedChatRooms: any = [];
-        axios.get(`${server}/api/getAllChats/${userID}`)
+        axios.get(`/api/getAllChats/${userID}`)
             .then((res: any) => {
                 if(res.data.length !== this.state.joinedChatRooms.length) {
                     myChatsArray = res.data;
@@ -172,7 +169,7 @@ class Chat extends React.Component<
     }
 
     fetchChatMessages = (chatRoomID: string) => {
-        axios.get(`${this.state.server}/api/getMessages/${chatRoomID}`)
+        axios.get(`/api/getMessages/${chatRoomID}`)
             .then((res: any) => {
                 if(chatRoomID === this.props.selectedChatRoom.chat_id) {
                     this.setState({
@@ -204,7 +201,7 @@ class Chat extends React.Component<
                             this.scrollToBottom();
                         })
                     } else {
-                        let requestUrl = `${this.state.server}/api/saveUnreadMessage`;
+                        let requestUrl = `/api/saveUnreadMessage`;
                         let requestData = {
                             recipient: this.state.userID,
                             chatID: data.chatID,
@@ -224,8 +221,8 @@ class Chat extends React.Component<
     }
 
     getUnreadMessage = () => {
-        let { server, userID } = this.state;
-        axios.get(`${server}/api/getUnreadMessage/${userID}`)
+        let { userID } = this.state;
+        axios.get(`/api/getUnreadMessage/${userID}`)
             .then((res: any) => {
                 this.setState({
                     unReadMessageArray: res.data
@@ -248,7 +245,6 @@ class Chat extends React.Component<
     }
 
     sendMessage = (selectedChatRoomID: string, messageText: string) => {
-        let { server } = this.state;
         let { userID } = this.state;
         let data = {
             chatID: selectedChatRoomID,
@@ -256,7 +252,7 @@ class Chat extends React.Component<
             messageText: messageText
         };
         socket.emit('send message', data);
-        let url = `${server}/api/sendMessage`;
+        let url = '/api/sendMessage';
         axios.post(url, {
             data
         }).then(() => {
@@ -275,7 +271,7 @@ class Chat extends React.Component<
     saveUnreadMessage = () => {
         socket.on("roomSize", (size) => {
             if(size === 1) {
-                let requestUrl = `${this.state.server}/api/saveUnreadMessage`;
+                let requestUrl = '/api/saveUnreadMessage';
                 if(Object.keys(this.props.selectedChatRoom).length > 0) {
                     let requestData = {
                         recipient: this.props.selectedChatRoom.user_id,

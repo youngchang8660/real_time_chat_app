@@ -6,7 +6,6 @@ import { TextField, Button } from '@material-ui/core';
 import MessageSnackbar from '../Reusable/MessageSnackbar';
 
 interface SignUpStateInterface {
-    server: string,
     user_id: string,
     first_name: string,
     last_name: string,
@@ -25,9 +24,7 @@ class SignUp extends React.Component<
 >{
     constructor(props: RouteComponentProps) {
         super(props);
-        let server: any = (localStorage.getItem("servername") === null || localStorage.getItem("servername") === undefined) ? "" : localStorage.getItem("servername");
         this.state = {
-            server: server,
             user_id: "",
             first_name: "",
             last_name: "",
@@ -84,7 +81,7 @@ class SignUp extends React.Component<
         let { user_id, first_name, last_name, email, password, password_confirm } = this.state;
         let isEmailValid = this.validateEmail(email);
         if(isEmailValid) {
-            let url = `${this.state.server}/api/signUpNewUser`;
+            let url = '/api/signUpNewUser';
             let data = {
                 'user_id': user_id,
                 'first_name': first_name,
