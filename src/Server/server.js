@@ -31,7 +31,7 @@ io.on("connection", (socket) => {
     })
 
     socket.on("getOnlineUsers", (roomId) => {
-        let number_of_connected_clients_in_the_room = io.sockets.adapter.rooms.get(roomId).size;
+        const number_of_connected_clients_in_the_room = io.sockets.adapter.rooms.get(roomId).size;
         io.to(roomId).emit("roomSize", number_of_connected_clients_in_the_room);
     })
 
@@ -42,7 +42,6 @@ io.on("connection", (socket) => {
 
     socket.on("disconnect", () => {
         console.log(`User ${socket.id} disconnected`);
-
     })
 })
 
@@ -471,6 +470,7 @@ app.get('/api/getUnreadMessage/:userID', async (req, res) => {
 // remove unread message
 app.delete('/api/removeUnreadMessage/:messageId', async (req, res) => {
     let { messageId } = req.params;
+    console.log(messageId)
     try {
         let query = "CALL Remove_Unread_Messages (?)";
         connection.query(query, [messageId], (err, result) => {

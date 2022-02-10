@@ -15,16 +15,42 @@ import Profile from './Components/App/Profile';
 import FriendsList from './Components/App/FriendsList';
 import { Redirect } from 'react-router-dom';
 import { CustomProvider } from 'rsuite';
-require('dotenv').config();
+import io from "socket.io-client";
 
-class App extends React.Component<any, {
+const endPoint = window.location.href.indexOf('localhost') > 0 ? 'http://localhost:5032' : 'https://165.227.31.155:5032';
+let socket: any;
 
-}>{
+interface AppStateInterface {
+
+}
+
+class App extends React.Component<
+  any,
+  AppStateInterface
+>{
   constructor(props: any) {
     super(props)
     this.state = {
-      
+
     }
+  }
+
+  componentDidMount() {
+    if(localStorage.getItem("user_id") !== null && socket === undefined) {
+      this.connectToSocket(endPoint)
+    }
+  }
+
+  connectToSocket = (endPoint: string) => {
+    socket = io(endPoint);
+  }
+
+  disconnectSocket = () => {
+    socket.disconnect();
+  }
+
+  componentWillUnmount() {
+    this.disconnectSocket();
   }
 
   render() {
@@ -35,12 +61,33 @@ class App extends React.Component<any, {
             <React.Fragment>
               <Route exact path="/signUp" component={SignUp} />
               <Route exact path="/" render={() => <Redirect to="/login" />} />
-              <Route exact path="/login" component={Login} />
+              <Route
+                exact path="/login"
+                render={(props) => (
+                  <Login 
+                    {...props} 
+                    connectToSocket={this.connectToSocket}
+                    disconnectSocket={this.disconnectSocket}
+                    socket={socket}
+                  />
+                )}
+              />  
               <div style={{display: 'flex'}}>
                 <CustomProvider theme="dark">
-                  <InnerSideNav />
+                  <InnerSideNav
+                    disconnectSocket={this.disconnectSocket}
+                  />
                 </CustomProvider>
-                <Route exact path="/chatApp/chat/:chat_id?" component={Chat} />
+                <Route
+                  exact path="/chatApp/chat/:chat_id?"
+                  render={(props) => (
+                    <Chat
+                      {...props}
+                      connectToSocket={this.connectToSocket}
+                      socket={socket}
+                    />
+                  )}
+                />
                 <Route exact path="/chatApp/profile" component={Profile} />
                 <Route exact path="/chatApp/friends" component={FriendsList} />      
               </div>

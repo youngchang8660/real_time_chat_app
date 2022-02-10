@@ -5,9 +5,14 @@ import ChatRoomList from './ChatRoomList';
 import ChatRoom from './ChatRoom';
 import { connect } from 'react-redux';
 import { selectChatRoom, toggleMobileAndChatSelected } from '../../redux/actions';
-import io from "socket.io-client";
 
-const socket = io('http://localhost:5032');
+let myInterval: any;
+const endPoint = window.location.href.indexOf('localhost') > 0 ? 'http://localhost:5032' : 'https://165.227.31.155:5032';
+
+interface AppProps {
+    socket: any,
+    connectToSocket: (endPoint: string) => void,
+}
 
 interface StateProps {
     selectedChatRoom: any,
@@ -31,7 +36,7 @@ interface ChatStateInterface {
     unReadMessageArray: Array<any>,
 }
 
-type Props = RouteComponentProps & StateProps & DispatchProps
+type Props = RouteComponentProps & AppProps & StateProps & DispatchProps
 
 class Chat extends React.Component<
     Props,
@@ -53,27 +58,38 @@ class Chat extends React.Component<
         }
     }
 
+
     componentDidMount = () => {
-        socket.connect();
         if(this.state.userID === null || this.state.userID === undefined) {
             return this.props.history.push('/')
         }
         if(!this.props.isMobileAndChatClicked && Object.keys(this.props.selectedChatRoom).length === 0) {
             this.props.history.push("/chatApp/chat")
         }
-        this.getMyInfo();
-        this.getUnreadMessage();
-        this.detectWindowSizeChange();
-        this.saveUnreadMessage();
-        this.getAllChats();
-        this.getMessages();
-        setInterval(() => {
-            this.getAllChats();
-        }, 3000)
-        window.addEventListener("resize", this.detectWindowSizeChange);
+
+        if(localStorage.getItem('user_id') !== null && (this.props.socket === undefined || !this.props.socket.connected)) {
+            this.props.connectToSocket(endPoint);
+        }
+        this.checkIfSocketConnected();
     }
 
-    componentDidUpdate(prevProps: any, prevState: any) {
+    checkIfSocketConnected = () => {
+        setTimeout(() => {
+            if(this.props.socket !== undefined) {
+                this.getMyInfo();
+                this.getAllChats();
+                this.saveUnreadMessage();
+                this.getMessages();
+                myInterval = setInterval(() => {
+                    this.getAllChats();
+                }, 3000)
+                this.detectWindowSizeChange();
+                window.addEventListener("resize", this.detectWindowSizeChange);
+            }
+        }, 1000)
+    }
+
+    componentDidUpdate(prevProps: any) {
         if(prevProps.selectedChatRoom.chat_id !== this.props.selectedChatRoom.chat_id) {
             this.fetchChatMessages(this.props.selectedChatRoom.chat_id);
         }
@@ -93,7 +109,8 @@ class Chat extends React.Component<
 
     componentWillUnmount = () => {
         window.removeEventListener("resize", this.detectWindowSizeChange);
-        socket.disconnect();
+        clearInterval(myInterval);
+        this.props.selectChatRoom({});
     }
 
     getMyInfo = () => {
@@ -136,10 +153,6 @@ class Chat extends React.Component<
                         myChatsArray,
                         joinedChatRooms
                     }, () => {
-                        for(let i = 0; i < this.state.joinedChatRooms.length; i++) {
-                            socket.emit("join", this.state.joinedChatRooms[i]);
-                            this.fetchChatMessages(this.state.joinedChatRooms[i]);
-                        }
                         if(!this.props.isMobileAndChatClicked) {
                             if(Object.keys(this.props.selectedChatRoom).length > 0) {
                                 this.state.myChatsArray.forEach((chat: any) => {
@@ -162,7 +175,10 @@ class Chat extends React.Component<
                                 })
                             }
                         }
-                        this.getUnreadMessage();
+                        // console.log(this.props.socket)
+                        for(let i = 0; i < this.state.joinedChatRooms.length; i++) {
+                            this.props.socket.emit("join", this.state.joinedChatRooms[i]);
+                        }
                     })
                 }
             })
@@ -186,8 +202,8 @@ class Chat extends React.Component<
     }
 
     getMessages = () => {
-        socket.on("get message", data => {
-            if(data.sender !== this.state.userID) {
+        this.props.socket.on("get message", (data: any) => {
+            if(data.messageText !== undefined) {
                 if(this.state.selectedRoomMessages.length > 0) {
                     if(this.state.selectedRoomMessages[0].Chat_id === data.chatID) {
                         this.setState({
@@ -216,6 +232,8 @@ class Chat extends React.Component<
                             })
                     }
                 }
+            } else {
+                this.fetchChatMessages(data.chatID);
             }
         })
     }
@@ -251,16 +269,15 @@ class Chat extends React.Component<
             sender: userID,
             messageText: messageText
         };
-        socket.emit('send message', data);
+        this.props.socket.emit('send message', data);
         let url = '/api/sendMessage';
         axios.post(url, {
             data
         }).then(() => {
-            this.fetchChatMessages(selectedChatRoomID)
             this.setState({
                 textMessage: ""
             }, () => {
-                socket.emit("getOnlineUsers", this.props.selectedChatRoom.chat_id);
+                this.props.socket.emit("getOnlineUsers", this.props.selectedChatRoom.chat_id);
             })
         }).catch(err => {
             console.log(err.message)
@@ -269,23 +286,21 @@ class Chat extends React.Component<
 
     // insert into unRead Message table if recipient is offline
     saveUnreadMessage = () => {
-        socket.on("roomSize", (size) => {
+        this.props.socket.on("roomSize", (size: any) => {
             if(size === 1) {
                 let requestUrl = '/api/saveUnreadMessage';
-                if(Object.keys(this.props.selectedChatRoom).length > 0) {
-                    let requestData = {
-                        recipient: this.props.selectedChatRoom.user_id,
-                        chatID: this.props.selectedChatRoom.chat_id,
-                        sender: this.state.userID,
-                        messageText: ""
-                    };
-                    axios.post(requestUrl, requestData)
-                        .then(() => {
-                            this.getUnreadMessage();
-                        }).catch(err => {
-                            console.log(err.message)
-                        })
-                }
+                let requestData = {
+                    recipient: this.props.selectedChatRoom.user_id,
+                    chatID: this.props.selectedChatRoom.chat_id,
+                    sender: this.state.userID,
+                    messageText: ""
+                };
+                axios.post(requestUrl, requestData)
+                    .then(() => {
+                        return
+                    }).catch(err => {
+                        console.log(err.message)
+                    })
             }
         })
     }
@@ -330,12 +345,12 @@ class Chat extends React.Component<
                         userInfo={userInfo}
                         userID={userID}
                         props={this.props}
-                        fetchChatMessages={this.fetchChatMessages}
                         sendMessage={this.sendMessage}
                         selectedRoomMessages={this.state.selectedRoomMessages}
                         onChangeTextMessage={this.onChangeTextMessage}
                         textMessage={this.state.textMessage}
                         scrollToBottom={this.scrollToBottom}
+                        socket={this.props.socket}
                     />
                 ):(
                     <div></div>

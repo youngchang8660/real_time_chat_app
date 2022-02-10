@@ -4,6 +4,14 @@ import { TextField, Button } from '@material-ui/core';
 import axios from 'axios';
 import MessageSnackbar from '../Reusable/MessageSnackbar';
 
+const endPoint = window.location.href.indexOf('localhost') > 0 ? 'http://localhost:5032' : 'https://165.227.31.155:5032';
+
+interface PropsInterface {
+    connectToSocket: (endPoint: string) => void,
+    disconnectSocket: () => void,
+    socket: any
+}
+
 interface LoginState {
     userID: string,
     password: string,
@@ -12,11 +20,13 @@ interface LoginState {
     status: number,
 }
 
+type Props = PropsInterface & RouteComponentProps;
+
 class Login extends React.Component<
-    RouteComponentProps,
+    Props,
     LoginState
 >{
-    constructor(props: RouteComponentProps) {
+    constructor(props: Props) {
         super(props);
         this.state = {
             userID: "",
@@ -32,6 +42,13 @@ class Login extends React.Component<
         localStorage.removeItem('email');
         localStorage.removeItem('first_name')
         localStorage.removeItem('last_name');
+        this.disconnectSocket();
+    }
+
+    disconnectSocket = () => {
+        if(this.props.socket !== undefined) {
+            this.props.disconnectSocket();
+        }
     }
 
     onKeyDownEnter = (e: any) => {
@@ -63,6 +80,7 @@ class Login extends React.Component<
                     localStorage.setItem('first_name', data.first_name)
                     localStorage.setItem('last_name', data.last_name)
                     localStorage.setItem('email', data.email)
+                    this.props.connectToSocket(endPoint);
                     this.props.history.push('/chatApp/chat')
                 }
             }).catch(err => {

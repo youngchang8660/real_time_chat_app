@@ -45,6 +45,7 @@ class ChatRoomList extends React.Component<
     }
 
     componentDidMount = () => {
+        this.props.getUnreadMessage();
         setTimeout(() => {
             this.loadDefaultSelectedChatRoom()
         }, 100)
@@ -91,9 +92,9 @@ class ChatRoomList extends React.Component<
                     })
             }
         }
+        this.props.getUnreadMessage();
         this.props.selectChatRoom(chat);
         this.props.history.push(`/chatApp/chat/${chatID}`);
-        this.props.getUnreadMessage();
         this.props.onChangeTextMessage("");
     }
 

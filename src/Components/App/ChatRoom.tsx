@@ -10,10 +10,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { Button } from '@mui/material';
 import { connect } from 'react-redux';
-import io from "socket.io-client";
 
 const darkTheme = createTheme({ palette: { mode: 'dark' } });
-const socket = io('http://localhost:5032');
 
 interface StateProps {
     selectedChatRoom: any
@@ -24,13 +22,12 @@ interface PropsInterface {
     userInfo: Array<any>,
     userID: string,
     props: any,
-    fetchChatMessages: (chatRoomID: string) => void,
     sendMessage: (selectedChatRoomID: string, messageText: string) => void,
     selectedRoomMessages: Array<any>,
     onChangeTextMessage: (textMessage: string) => void,
     textMessage: string,
     scrollToBottom: () => void,
-
+    socket: any,
 }
 
 interface ChatRoomStateInterface {
@@ -82,7 +79,7 @@ class ChatRoom extends React.Component<
             sender: message['Sender'],
             messageText: message['Message_text']
         }
-        socket.emit('send message', data);
+        this.props.props.socket.emit('send message', data);
         let url = '/api/editMessage';
         axios.put(url, {
             data
@@ -102,12 +99,12 @@ class ChatRoom extends React.Component<
             messageID: message['Message_id'],
             sender: message['Sender']
         }
-        socket.emit('send message', data);
+        this.props.props.socket.emit('send message', data);
         let url = '/api/deleteMessage';
         axios.delete(url, {
             data
         }).then(() => {
-            this.props.fetchChatMessages(this.props.selectedChatRoom.chat_id);
+            return
         }).catch(err => {
             console.log(err.message);
         })

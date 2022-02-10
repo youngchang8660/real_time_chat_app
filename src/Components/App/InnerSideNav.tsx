@@ -11,6 +11,12 @@ import {connect} from 'react-redux';
 import { selectChatRoom, toggleMobileAndChatSelected } from '../../redux/actions';
 import SignOutDialog from './SignOutDialog';
 
+const endPoint = window.location.href.indexOf('localhost') > 0 ? 'http://localhost:5032' : 'https://165.227.31.155:5032';
+
+interface AppProps {
+    disconnectSocket: () => void,
+}
+
 interface StateProps {
     selectedChatRoom: any,
     isMobileAndChatClicked: boolean
@@ -29,7 +35,7 @@ interface InnerSideNavState {
     userID: any
 }
 
-type Props = StateProps & DispatchProps & RouteComponentProps;
+type Props = AppProps & StateProps & DispatchProps & RouteComponentProps;
 
 class InnerSideNav extends React.Component<
     Props,
@@ -58,12 +64,15 @@ class InnerSideNav extends React.Component<
                 }
                 break;
             case "2":
+                this.props.disconnectSocket();
                 this.props.history.push('/chatApp/friends');
                 break;
             case "3":
+                this.props.disconnectSocket();
                 this.props.history.push('/chatApp/profile');
                 break;
             case "4":
+                this.props.disconnectSocket();
                 this.props.selectChatRoom({});
                 this.closeLogOutDialog(true);
                 break;   
