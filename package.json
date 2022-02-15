@@ -2,6 +2,7 @@
   "name": "real-time-chat-app",
   "version": "0.1.0",
   "private": true,
+  "main": "Server/server.js",
   "proxy": "http://localhost:5032",
   "dependencies": {
     "@emotion/core": "^11.0.0",
@@ -41,6 +42,7 @@
     "moment": "^2.29.1",
     "mui-alert": "^1.0.0-beta4",
     "mysql": "^2.18.1",
+    "path": "^0.12.7",
     "prop-types": "^15.7.2",
     "qs": "^6.10.1",
     "react": "^17.0.2",
@@ -61,9 +63,9 @@
     "web-vitals": "^1.1.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "server": "nodemon ./src/Server/server.js",
-    "build": "react-scripts build",
+    "start": "react-scripts start --max_old_space_size=8192 ",
+    "server": "nodemon ./Server/server.js",
+    "build": "react-scripts build NODE_OPTIONS=--max_old_space_size=8192 webpack -p",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

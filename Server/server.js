@@ -7,16 +7,12 @@ const bcrypt = require("bcrypt");
 const cors = require('cors');
 const server = http.createServer(app);
 const path = require('path');
-app.use(cors());
 app.use(express.json({limit: '50mb'}))
-app.use(express.static(`${__dirname}/../build`));
-
-// app.get('*', (req, res) => {
-//     res.sendFile(path.join(__dirname, '../../build/index.html'));
-// })
-// app.get('*', (req, res) => {
-//     res.sendFile(path.join(__dirname, '../../build/index.html'))
-// })
+app.use(cors());
+app.use(express.static(__dirname + '/../build'));
+app.get('/api', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../build/index.html'));
+})
 
 const socketIo = require("socket.io");
 const io = socketIo(server, {
@@ -144,6 +140,7 @@ app.get('/api/getUserInfo/:userID', async (req, res) => {
         let query = "CALL Get_User_Info (?)";
         connection.query(query, [userID], (err, result) => {
             if(err) {
+                console.log(err)
                 return res.status(500).send(err.message);
             } else {
                 return res.status(200).send(result[0]);
